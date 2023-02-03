@@ -1,0 +1,151 @@
+.background-outer{
+  background-color: #E7AC76;
+  height: 1080px;
+  width: 1920px;
+  position: absolute;
+  padding: 0;
+  border: 0;
+}
+
+.background-inner{
+  background-color: #E4D8C6;
+  height: 1000px;
+  width: 1770px;
+  position: relative;
+  top: 80px;
+  left: 75px;
+  border-top-left-radius: 35px;
+  border-top-right-radius: 35px;
+  padding: 0;
+  border: 0;
+}
+
+.background-home-page{
+  height: 1000px;
+  width: 1770px;
+  background-color: none;
+  display: flex;
+  align-items: center;
+}
+
+.left-tab{
+  background-color: #E7BF83;
+  height: 1000px;
+  width: 410px;
+  border-top-left-radius: 35px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-background{
+  background-color: #E4D8C6;
+  height: 270px;
+  width: 270px;
+  border-radius: 135px;
+  margin-top: 70px;
+  display: flex;
+  align-items: center;
+}
+
+.logo{
+  height: 230px;
+  width: 230px;
+  margin: auto;
+  background-size: 240px;
+  background-image: url('./resources/img/Logo.png');
+}
+
+.project-name{
+  font-size: 48px;
+  font-family: "Helvetica Neue";
+}
+
+.button-profile-series{
+  position: relative;
+  height: 500px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  top: 30px
+}
+
+.button-profile{
+  height: 90px;
+  width: 300px;
+  border: 4px solid black;
+  margin-top: 25px;
+  border-radius: 50px;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.main-home-intro{
+  height: 920px;
+  width: 1325px;
+  background-image: url('./resources/img/main-home-intro.png');
+  background-size: cover;
+}
+
+.welcome-class{
+  font-size: 60px;
+  text-align: center;
+  color: #E4D8C6;
+  width: 98%;
+  margin-top: 50px;
+}
+
+.button-game-series{
+  position: relative;
+  height: 700px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  left: 100px;
+}
+
+.button-game{
+  height: 120px;
+  width: 400px;
+  border: 4px solid black;
+  margin-top: 70px;
+  border-radius: 25px;
+  font-size: 26px;
+}
+
+.main{
+  width: 1360px;
+  height: 100%;
+}
+
+.top-tab{
+  height: 120px;
+  width: 100%;
+  background-color: #619354;
+  top: 0px;
+  display: flex;
+  align-items: center;
+  border-top-right-radius: 35px;
+}
+
+.top-tab-v2{
+  height: 120px;
+  width: 100%;
+  background-color: #619354;
+  top: 0px;
+  display: flex;
+  align-items: center;
+  border-top-right-radius: 35px;
+  border-top-left-radius: 35px;
+}
+
+.top-tab-button-game{
+  margin-left: 15px;
+  margin-right: 15px;
+  width: 100%;
+  height: 80px;
+  border-radius: 50px;
+  font-size: 25px;
+}
