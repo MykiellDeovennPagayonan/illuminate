@@ -6,7 +6,7 @@ import "./games copy.css";
 function WordSearch() { 
   let words = ["cat", "dog", "sun", "man", "top", "map", "pen", "box", "hat", "car", "bus", "leg", "fun", "run", "bun", "wet", "red", "big", "mix", "six", "yes", "lip", "cup", "tap", "rot", "fun", "sat", "wet", "wag", "hot", "wet", "fog", "jog", "gas", "tag", "act", "bag", "get", "pig", "dig", "fit", "kit", "nit", "sit", "bit", "kit", "zip", "yam", "yap", "yum"]
   
-  let indexes = []
+  let indexes = [[], []]
   let numWords = 3
   const rows = 10
   const columns = 8
@@ -39,19 +39,23 @@ function WordSearch() {
       if (arrangementIndex === 0) {
         xStartInitial = Math.floor(Math.random()*rows)
         yStartInitial = Math.floor(Math.random()*(columns - words[randomWordIndex].length))
-        yEndInitial = yStartInitial + words[randomWordIndex].length
+        xEndInitial = xStartInitial
+        yEndInitial = yStartInitial + (words[randomWordIndex].length - 1)
       } else if (arrangementIndex === 1) {
         xStartInitial = Math.floor(Math.random()*rows)
         yStartInitial = Math.floor(Math.random()*(columns - words[randomWordIndex].length)) + words[randomWordIndex].length
-        yEndInitial = yStartInitial - words[randomWordIndex].length
+        xEndInitial = xStartInitial
+        yEndInitial = yStartInitial - (words[randomWordIndex].length - 1)
       } else if (arrangementIndex === 2) {
         xStartInitial = Math.floor(Math.random()*(rows - words[randomWordIndex].length))
         yStartInitial = Math.floor(Math.random()*columns)
-        xEndInitial = xStartInitial + words[randomWordIndex].length
+        xEndInitial = xStartInitial + (words[randomWordIndex].length - 1)
+        yEndInitial = yStartInitial
       } else if (arrangementIndex === 3) {
         xStartInitial = Math.floor(Math.random()*(rows - words[randomWordIndex].length)) + words[randomWordIndex].length
         yStartInitial = Math.floor(Math.random()*columns)
-        xEndInitial = xStartInitial - words[randomWordIndex].length
+        xEndInitial = xStartInitial - (words[randomWordIndex].length - 1)
+        yEndInitial = yStartInitial
       }
   
       let xWrite = xStartInitial
@@ -81,31 +85,134 @@ function WordSearch() {
         yStart: yStartInitial,
         xEnd: xEndInitial,
         yEnd: yEndInitial,
-        activation: true
+        arrangement: arrangementIndex,
+        activation: false
       })
     }
+
+    for (let i = 0; i < rows*columns; i++) {
+      if (boxesContent[i].letter === "-") {
+        boxesContent[i].letter = letterBackground[i]
+      }
+    }
+
     SetWordsChosen(wordsChosenInitial)
     SetBoxes(boxesContent)
   }
   
+  function randomLetters(){
+    let letterBackgroundInitial = []
+    for (let k = 0; k < rows*columns; k++){
+      letterBackgroundInitial.push(String.fromCharCode(Math.floor(Math.random()*26) + 97))
+    }
+    return letterBackgroundInitial
+  }
+
+  const [ letterBackground, setLetterBackground ] = useState(randomLetters())
+
   function newSet(){
+    setLetterBackground(randomLetters())
     do{
       setWordsAndLetters()
       console.log("try")
     } while (repeat)
-
   }
 
   useEffect(() => {
-    newSet(null)
+    newSet()
   }, [])
+
+  function startIndex(indexS) {
+    indexes[0][0] = indexS
+    console.log(indexS)
+  }
+
+  function endIndex(indexE) {
+    indexes[0][1] = indexE
+    console.log(indexE)
+    refreshBoard()
+  }
+
+  function refreshBoard() {
+    let boxesInitial = [...boxes]
+    for (let i = 0; i < rows*columns; i++){
+      boxesInitial[i].activation = false
+    }
+    boxesInitial[indexes[0][0]].activation = true
+    boxesInitial[indexes[0][1]].activation = true
+    SetBoxes(boxesInitial)
+    checkWord()
+  }
+
+  function checkWord(){
+    let boxesInitial = [...boxes]
+    let wordsChosenInitial = [...wordsChosen]
+    for (let i = 0; i < wordsChosen.length; i++){
+      if (wordsChosen[i].activation === true){
+        let xWrite = wordsChosen[i].xStart
+        let yWrite = wordsChosen[i].yStart
+        for (let j = 0; j < wordsChosen[i].word.length; j++){
+          boxesInitial[yWrite*rows + xWrite].activation = true
+          console.log("hi")
+          if (wordsChosen[i].arrangement === 0){
+            yWrite++
+          } else if (wordsChosen[i].arrangement === 1) {
+            yWrite--
+          } else if (wordsChosen[i].arrangement === 2) {
+            xWrite++
+          } else {
+            xWrite--
+          }
+        }
+      } else if(boxes[wordsChosen[i].yStart*rows + wordsChosen[i].xStart].activation === true && boxes[wordsChosen[i].yEnd*rows + wordsChosen[i].xEnd].activation === true) {
+        wordsChosenInitial[i].activation = true
+      }
+    }
+    console.log(wordsChosenInitial)
+    SetWordsChosen(wordsChosenInitial)
+    activateCompleteLetters()
+  }
+
+  function activateCompleteLetters(){
+    let boxesInitial = [...boxes]
+    for (let i = 0; i < wordsChosen.length; i++){
+      if (wordsChosen[i].activation === true){
+        let xWrite = wordsChosen[i].xStart
+        let yWrite = wordsChosen[i].yStart
+        for (let j = 0; j < wordsChosen[i].word.length; j++){
+          boxesInitial[yWrite*rows + xWrite].activation = true
+          console.log("hi")
+          if (wordsChosen[i].arrangement === 0){
+            yWrite++
+          } else if (wordsChosen[i].arrangement === 1) {
+            yWrite--
+          } else if (wordsChosen[i].arrangement === 2) {
+            xWrite++
+          } else {
+            xWrite--
+          }
+        }
+      } 
+    }
+    SetBoxes(boxesInitial)
+  }
 
   return (
     <>
+      <div className="word-search-words-grid">
+        {wordsChosen.map((wordsChosen) => {
+          if (wordsChosen.activation === false){
+            return(<button className="word-search-words"> {wordsChosen.word} </button>)
+          } else {
+            return(<button className="word-search-words-activated"> {wordsChosen.word} </button>)
+          }
+        })}
+        <button className="word-search-words" style={{width: 260, backgroundColor: "#E7BF83"}} onClick={() => newSet()}> next set </button>
+      </div>
       <div className="grid">
         {boxes.map((box, index) => {
           if (box.activation === false){
-            return (<button className="grid-box" > {box.letter} </button>)
+            return (<button className="grid-box" onMouseDown={() => startIndex(index)} onMouseUp={() => {endIndex(index)}}> {box.letter} </button>)
           } else {
             return (<button className="grid-box-enlarged"> {box.letter} </button>)
           }
