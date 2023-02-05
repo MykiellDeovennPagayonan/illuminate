@@ -1,52 +1,55 @@
-.classes-holder{
-    height: 940px;
+.component-holder{
+    height: 910px;
     width: 1295px;
     position: absolute;
     top: 117px;
     left: 520px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+}
+
+.classes-holder{
+    height: 880px;
+    width: 1295px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 170px 170px 170px 170px;
 }
 
 .classes{
-    height: 95px;
-    width: 1295px;
-    background-color: #619354;
+    height: 150px;
+    width: 610px;
+    background-color: beige;
     border-radius: 35px;
     font-size: 40px;
     margin-bottom: 20px;
 }
 
-.classes-info{
-    height: 85px;
-    width: 1295px;
-    display: grid;
-    grid-template-columns: 700px 515px 70px;
-    align-items: center;
-}
-
 .classes-info-name{
     border: none;
     background: none;
-    height: 85px;
+    padding: 0px;
+    padding-top: 25px;
+    height: 55px;
     margin: 0px;
-    margin-left: 30px;
-    width: fit-content;
-    text-align: end;
-    vertical-align: baseline;
-    font-size: 45px;
+    width: 500px;
+    font-size: 35px;
     font-weight: bold;
+    text-align: left;
+}
+
+.line{
+    height: 1px;
+    width: 595px;
+    background-color: black;
 }
 
 .classes-info-number{
     border: none;
     background: none;
-    height: 85px;
+    height: 25px;
     margin: 0px;
-    width: fit-content;
-    vertical-align: middle;
-    font-size: 35px;
+    width: 500px;
+    font-size: 25px;
+    text-align: left;
 }
 
 .edit{
@@ -55,22 +58,29 @@
     background-image: url('./resources/img/edit.png');
     height: 45px;
     width: 45px;
+    margin-left: 20px;
     background-size: cover;
 }
 
 .add-classes{
     height: 95px;
-    width: 1200px;
-    background-color: beige;
+    width: 600px;
+    background-color: #86bc79;
     border-radius: 35px;
     font-size: 40px;
     color: rgba(0, 0, 0, 0.716);
 }
 
 .change-class-name{
-    font-size: 50px;
-    margin-left: 30px;
-    margin-right: 30px;
+    border: none;
+    padding: 0px;
+    padding-top: 25px;
+    height: 35px;
+    margin: 0px;
+    width: 500px;
+    font-size: 35px;
+    font-weight: bold;
+    text-align: left;
 }
 
 .check{
@@ -79,5 +89,29 @@
     background-image: url('./resources/img/check.png');
     height: 45px;
     width: 45px;
+    margin-left: 20px;
     background-size: cover;
+}
+
+.trash{
+    border: none;
+    background: none;
+    background-image: url('./resources/img/trash.png');
+    height: 25px;
+    width: 25px;
+    background-size: cover;
+}
+
+.trash-not{
+    border: none;
+    background: none;
+    height: 25px;
+    width: 25px;
+}
+
+.bottom-holder{
+    width: 1295px;
+    height: 50px;
+    display: flex;
+    align-items: center;
 }

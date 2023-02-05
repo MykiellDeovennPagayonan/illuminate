@@ -66,10 +66,6 @@ function WordSearch() {
           } else {
             good = false
           }
-
-          if (j < wordsUse.word.length - 1){
-            
-          }
   
           if (wordsUse.arrangement[i] === 0){
             wordsUse.yStart[i]++
@@ -602,9 +598,9 @@ let FreeDrawing = () => {
     contextRef.current.stroke();
     setIsDrawing(true);
     nativeEvent.preventDefault();
-};
+  };
 
-const draw = ({nativeEvent}) => {
+  const draw = ({nativeEvent}) => {
     if(!isDrawing) {
         return;
     }
@@ -613,29 +609,29 @@ const draw = ({nativeEvent}) => {
     contextRef.current.lineTo(offsetX, offsetY);
     contextRef.current.stroke();
     nativeEvent.preventDefault();
-};
+  };
 
-const stopDrawing = () => {
+  const stopDrawing = () => {
     contextRef.current.closePath();
     setIsDrawing(false);
-};
+  };
 
-const setToDraw = () => {
-  setErase(false)
-  contextRef.current.globalCompositeOperation = 'source-over';
-};
+  const setToDraw = () => {
+    setErase(false)
+    contextRef.current.globalCompositeOperation = 'source-over';
+  };
 
-const setToErase = () => {
-  setErase(true)
-  contextRef.current.globalCompositeOperation = 'destination-out';
-};
+  const setToErase = () => {
+    setErase(true)
+    contextRef.current.globalCompositeOperation = 'destination-out';
+  };
 
-const saveImageToLocal = (event) => {
-  let link = event.currentTarget;
-  link.setAttribute('download', 'canvas.jpg');
-  let image = canvasRef.current.toDataURL('image/jpg');
-  link.setAttribute('href', image);
-};
+  const saveImageToLocal = (event) => {
+    let link = event.currentTarget;
+    link.setAttribute('download', 'canvas.jpg');
+    let image = canvasRef.current.toDataURL('image/jpg');
+    link.setAttribute('href', image);
+  };
 
   return (
     <>

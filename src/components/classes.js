@@ -1,6 +1,6 @@
 import "./classes.css"
-import { useEffect, useState } from "react";
-import { addClass, classes, classViewing, edit, check, rename } from "./backend/data";
+import { useState } from "react";
+import { addClass, deleteClass, classes, editC, checkC, renameClass, editClasses, viewClass } from "./backend/data";
 
 function Classes(props) {
   const [ render, setRender ] = useState(1)
@@ -9,34 +9,35 @@ function Classes(props) {
     setRender(num => -(num))
   }
 
-  console.log(classes.length)
   return (
-    <div className="classes-holder">
-      {classes.map((classes, index) => {
-        if (classes.edit === true){
-          return(
-            <button className="classes">
-              <div className="classes-info">
-                <input className="change-class-name" type="text" onChange={(e) => rename(e.target.value, index)}/>
+    <div className="component-holder">
+      <div className="classes-holder">
+        {classes.map((classes, index) => {
+          if (editClasses === true){
+            return(
+              <button className="classes">
+                <input className="change-class-name" type="text" onChange={(e) => renameClass(e.target.value, index)} placeholder={classes.name}/>
+                <div className="line"></div>
                 <button className="classes-info-number"> Number of Students: {classes.studentsList.length} </button>
-                <button className="check" onClick={() => {check(index); rerender()}}> </button>
-              </div>
-
-            </button>
-          )
-        } else {
-          return(
-            <button className="classes" onMouseOver={() => {classViewing(index)}} onClick={() => props.PageChange(7)}>
-              <div className="classes-info">
+                <button className="trash" onClick={() => {deleteClass(index); rerender()}}></button>
+              </button>
+            )
+          } else {
+            return(
+              <button className="classes" onClick={() => { viewClass(index); props.PageChange(7)}}>
                 <button className="classes-info-name"> {classes.name} </button>
+                <div className="line"></div>
                 <button className="classes-info-number"> Number of Students: {classes.studentsList.length} </button>
-                <button className="edit" onClick={() => {edit(index); rerender()}}> </button>
-              </div>
-            </button>
-          )
-        }
-      })}
-      {classes.length < 8 ? <button className="add-classes" onClick={() => {addClass(); rerender()}}> + Create New Class + </button> : null}
+                <button className="trash-not"></button>
+              </button>
+            )
+          }
+        })}
+        {classes.length < 10 ? <button className="add-classes" onClick={() => {addClass(); rerender()}}> + Create New Class + </button> : null}
+      </div>
+      <div className="bottom-holder">
+        {editClasses === false ? <button className="edit" onClick={() => {editC(); rerender()}}> </button> : <button className="check" onClick={() => {checkC(); rerender()}}> </button>}
+      </div>
     </div>
   );
 }

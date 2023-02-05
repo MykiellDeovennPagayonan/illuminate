@@ -6,82 +6,110 @@ function sum(array){
   return sum;
 }
 
-let student = {
-  name: undefined,
-  age: undefined,
-  diagnosis: "not diagnosed",
-
-  matchingAndDrawing: {
-
-    wordSearch: {
-      exercises: [],
-      time: []
-    },
-
-    sequenceMemorization: {
-      exercises: [],
-      time: []
-    },
-
-    LetterRescramble: {
-      exercises: [],
-      time: []
-    },
-
-    redraw: {
-      exercises: [],
-      time: []
-    },
-
-    drawingcanvas: {
-      drawings: [],
-      time: []     
-    }
-  }, 
-
-  shawdows: {
-    shadowBuilding: {
-      exercises: [],
-      accuracy: []
-    },
-
-    handShadowPlay: {
-      exercises: [],
-      accuracy: []
-    },
-
-    shadowinTheWall: {
-      exercises: [],
-      accuracy: []
-    }
-  }
-}
-
-let classes = [{name: "Class 1", studentsList: [student], edit: false}]
+let classes = [{name: "Class 1", studentsList: []}]
 let classViewing = 0
+let studentViewing = 0
+let editClasses = false
+let editStudents = false
 
 function addClass(){
-  classes.push({name: undefined, studentsList: [student], edit: true})
+  classes.push({name: "Class", studentsList: []})
 }
 
-function edit(index){
-  classes[index].edit = true
+function deleteClass(index){
+  classes.splice(index, 1)
 }
 
-function check(index){
-  classes[index].edit = false
+function editC(){
+  editClasses = true
 }
 
-function rename(data, index){
+function checkC(){
+  editClasses = false
+}
+
+function editS(){
+  editStudents = true
+}
+
+function checkS(){
+  editStudents = false
+}
+
+function renameClass(data, index){
   classes[index].name = data
+}
+
+function renameStudent(data, index){
+  classes[classViewing].studentsList[index].name = data
 }
 
 function viewClass(index){
   classViewing = index
 }
 
-function addStudent(){
-  classes[classViewing].studentsList.push(student)
+function viewStudent(index){
+  studentViewing = index
 }
 
-export { classes, classViewing, addClass, edit, check, rename, viewClass, addStudent }
+function addStudent(){
+  classes[classViewing].studentsList.push({
+    name: undefined,
+    age: undefined,
+    diagnosis: "not diagnosed",
+  
+    matchingAndDrawing: {
+  
+      wordSearch: {
+        exercises: [],
+        time: []
+      },
+  
+      sequenceMemorization: {
+        exercises: [],
+        time: []
+      },
+  
+      LetterRescramble: {
+        exercises: [],
+        time: []
+      },
+  
+      redraw: {
+        exercises: [],
+        time: []
+      },
+  
+      drawingcanvas: {
+        drawings: [],
+        time: []     
+      }
+    }, 
+  
+    shawdows: {
+      shadowBuilding: {
+        exercises: [],
+        accuracy: []
+      },
+  
+      handShadowPlay: {
+        exercises: [],
+        accuracy: []
+      },
+  
+      shadowinTheWall: {
+        exercises: [],
+        accuracy: []
+      }
+    }
+  })
+}
+
+addStudent()
+
+function removeStudent(index){
+  console.log("oh no")
+  classes[classViewing].studentsList.splice(index, 1)
+}
+
+export { classes, classViewing, studentViewing, addClass, deleteClass, editC, checkC, editS, checkS, renameClass, viewClass, viewStudent, addStudent, removeStudent, renameStudent, editClasses, editStudents }

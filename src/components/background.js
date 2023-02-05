@@ -10,7 +10,7 @@ function BackgroundHomePage(props) {
             <div className='logo-background'>
               <div className="logo"></div>
             </div>
-            <h2 className='project-name'> Illuminate </h2>
+            <h1 className='project-name'> Illuminate </h1>
             <div className='button-profile-series'>
               <button className='button-profile' onClick={() => props.PageChange(1)} style={{backgroundColor: "#9ad08d"}}> Games </button>
               <button className='button-profile' onClick={() => props.PageChange(6)} > Classes </button>
@@ -50,7 +50,7 @@ function BackgroundClassesPage(props) {
             <div className='logo-background'>
               <div className="logo"></div>
             </div>
-            <h2 className='project-name'> Illuminate </h2>
+            <h1 className='project-name'> Illuminate </h1>
             <div className='button-profile-series'>
             <button className='button-profile' onClick={() => props.PageChange(1)} > Games </button>
               <button className='button-profile' onClick={() => props.PageChange(6)} style={{backgroundColor: "#9ad08d"}}> Classes </button>
@@ -74,7 +74,7 @@ function BackgroundStudentsPage(props) {
             <div className='logo-background'>
               <div className="logo"></div>
             </div>
-            <h2 className='project-name'> Illuminate </h2>
+            <h1 className='project-name'> Illuminate </h1>
             <div className='button-profile-series'>
             <button className='button-profile' onClick={() => props.PageChange(1)} > Games </button>
               <button className='button-profile' onClick={() => props.PageChange(6)} > Classes </button>
@@ -98,7 +98,7 @@ function BackgroundStatisticsPage(props) {
             <div className='logo-background'>
               <div className="logo"></div>
             </div>
-            <h2 className='project-name'> Illuminate </h2>
+            <h1 className='project-name'> Illuminate </h1>
             <div className='button-profile-series'>
             <button className='button-profile' onClick={() => props.PageChange(1)} > Games </button>
               <button className='button-profile' onClick={() => props.PageChange(6)} > Classes </button>
@@ -122,7 +122,7 @@ function BackgroundGames1(props) {
             <div className='logo-background'>
             <div className="logo"></div>
           </div>
-          <h2 className='project-name'> Illuminate </h2>
+          <h1 className='project-name'> Illuminate </h1>
           <div className='button-profile-series'>
             <button className='button-profile' onClick={() => {
                 props.PageChange(2)
@@ -166,7 +166,7 @@ function BackgroundGames2(props) {
             <div className='logo-background'>
               <div className="logo"></div>
             </div>
-            <h2 className='project-name'> Illuminate </h2>
+            <h1 className='project-name'> Illuminate </h1>
             <div className='button-profile-series'>
               <button className='button-profile' onClick={() => {
                 props.PageChange(2)
@@ -226,7 +226,7 @@ function BackgroundGames3(props) {
             <div className='logo-background'>
               <div className="logo"></div>
             </div>
-            <h2 className='project-name'> Illuminate </h2>
+            <h1 className='project-name'> Illuminate </h1>
             <div className='button-profile-series'>
               <button className='button-profile' onClick={() => {
                 props.PageChange(2)

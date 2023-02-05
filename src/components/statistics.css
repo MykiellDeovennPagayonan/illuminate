@@ -1,0 +1,22 @@
+.class-name{
+  height: 100px;
+  width: 250px;
+  background-color: #e1c7a1;
+  font-size: 32px;
+  border: 4px solid black;
+  border-radius: 35px;
+  margin-top: none;
+}
+
+.student-name{
+  height: 100px;
+  width: 250px;
+  background-color: white;
+  font-size: 32px;
+  border: 4px solid black;
+  margin-top: none;
+}
+
+h2{
+  color: white;
+}

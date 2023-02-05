@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { BackgroundHomePage, BackgroundClassesPage, BackgroundStudentsPage, BackgroundStatisticsPage, BackgroundGames1, BackgroundGames2, BackgroundGames22, BackgroundGames3 } from './components/background';
-import { WordSearch, SequenceMemorization, LetterRescramble, LineDrawing, FreeDrawing } from './components/games';
+import { SequenceMemorization, LetterRescramble, LineDrawing, FreeDrawing } from './components/games';
 import { Classes } from './components/classes';
 import { StudentsPage } from './components/students';
+import { StatisticsPage } from './components/statistics';
+import { WordSearch } from './components/games copy';
 
 function App() {
   const [ pageNum, setPageNum ] = useState(1)
@@ -32,9 +34,9 @@ function App() {
       </div> : null}
       {pageNum === 6 ? <div><BackgroundClassesPage PageChange = {pageNum => setPageNum(pageNum)} /> <Classes PageChange = {pageNum => setPageNum(pageNum)}/>
       </div> : null}
-      {pageNum === 7 ? <div><BackgroundStudentsPage PageChange = {pageNum => setPageNum(pageNum)} /> <StudentsPage />
+      {pageNum === 7 ? <div><BackgroundStudentsPage PageChange = {pageNum => setPageNum(pageNum)} /> <StudentsPage PageChange = {pageNum => setPageNum(pageNum)}/>
       </div> : null}
-      {pageNum === 8 ? <div><BackgroundStatisticsPage PageChange = {pageNum => setPageNum(pageNum)} />
+      {pageNum === 8 ? <div><BackgroundStatisticsPage PageChange = {pageNum => setPageNum(pageNum)} /> <StatisticsPage />
       </div> : null}
     </>
   );
