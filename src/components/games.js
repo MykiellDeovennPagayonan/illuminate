@@ -5,226 +5,220 @@ import "./games.css";
 
 function WordSearch() { 
   let words = ["cat", "dog", "sun", "man", "top", "map", "pen", "box", "hat", "car", "bus", "leg", "fun", "run", "bun", "wet", "red", "big", "mix", "six", "yes", "lip", "cup", "tap", "rot", "fun", "sat", "wet", "wag", "hot", "wet", "fog", "jog", "gas", "tag", "act", "bag", "get", "pig", "dig", "fit", "kit", "nit", "sit", "bit", "kit", "zip", "yam", "yap", "yum"]
-  const [ wordSearch, setWordSearch] = useState([])
   
-  let indexes = []
+  let indexes = [[], []]
   let numWords = 3
-  const rows = 14
-  const columns = 12
+  const rows = 10
+  const columns = 8
+  let repeat;
 
-  let wordsUse;
+  const [ wordsChosen, SetWordsChosen] = useState([])
+  const [ boxes, SetBoxes] = useState([])
+  const [ done, setDone ] = useState(false)
 
-  function randomWords(){
-    while(true){
-      let good = true
-      let grid = []
-      wordsUse = {
-        word: [],
-        xStart: [],
-        yStart: [],
-        arrangement: [],
-        xEnd: [],
-        yEnd: [],
-        activation: []
+  function setWordsAndLetters(){
+    repeat = false
+    let boxesContent = []
+    let wordsChosenInitial = []
+  
+    for (let i = 0; i < rows*columns; i++) {
+      boxesContent.push({letter: "-", activation: false})
+    }
+  
+    for (let i = 0; i < numWords; i++) {
+      let randomWordIndex = Math.floor(Math.random()*words.length)
+      let arrangementIndex = Math.floor(Math.random()*4) // 0 is down, 1 is up, 2 is right, 3 is left
+  
+      let xStartInitial;
+      let yStartInitial;
+  
+      let xEndInitial;
+      let yEndInitial;
+  
+      if (arrangementIndex === 0) {
+        xStartInitial = Math.floor(Math.random()*rows)
+        yStartInitial = Math.floor(Math.random()*(columns - words[randomWordIndex].length))
+        xEndInitial = xStartInitial
+        yEndInitial = yStartInitial + (words[randomWordIndex].length - 1)
+      } else if (arrangementIndex === 1) {
+        xStartInitial = Math.floor(Math.random()*rows)
+        yStartInitial = Math.floor(Math.random()*(columns - words[randomWordIndex].length)) + words[randomWordIndex].length
+        xEndInitial = xStartInitial
+        yEndInitial = yStartInitial - (words[randomWordIndex].length - 1)
+      } else if (arrangementIndex === 2) {
+        xStartInitial = Math.floor(Math.random()*(rows - words[randomWordIndex].length))
+        yStartInitial = Math.floor(Math.random()*columns)
+        xEndInitial = xStartInitial + (words[randomWordIndex].length - 1)
+        yEndInitial = yStartInitial
+      } else if (arrangementIndex === 3) {
+        xStartInitial = Math.floor(Math.random()*(rows - words[randomWordIndex].length)) + words[randomWordIndex].length
+        yStartInitial = Math.floor(Math.random()*columns)
+        xEndInitial = xStartInitial - (words[randomWordIndex].length - 1)
+        yEndInitial = yStartInitial
       }
   
-      for (let c = 0; c < columns; c++){
-        grid.push([])
-
-        for (let r = 0; r < rows; r++){
-          grid[c].push('-')
-        }
-      }
+      let xWrite = xStartInitial
+      let yWrite = yStartInitial
   
-      for (let i = 0; i < numWords; i++){
-
-        wordsUse.activation.push(false)
-  
-        let chosen = Math.floor(Math.random()*words.length)
-        wordsUse.word.push(words[chosen])
-        let arrangeID = Math.floor(Math.random()*4)
-        wordsUse.arrangement.push(arrangeID) // 0 is down, 1 is up, 2 is right, 3 is left
-  
-        let x;
-        let y;
-  
-        do {
-          x = Math.floor(Math.random()*rows)
-          y = Math.floor(Math.random()*columns)
-  
-        } while ((arrangeID === 0 && y > columns-wordsUse.word[i].length-1) || (arrangeID === 1 && y < wordsUse.word[i].length-1) || (arrangeID === 2 && x > rows-wordsUse.word[i].length-1) || (arrangeID === 3 && x < wordsUse.word[i].length-1))
-          
-        wordsUse.xStart.push(x)
-        wordsUse.yStart.push(y)
-        console.log(wordsUse.word[i].length)
-      }
-  
-      for (let i = 0; i < numWords; i++){
-        for (let j = 0; j < wordsUse.word.length; j++){
-          if (grid[wordsUse.yStart[i]][wordsUse.xStart[i]] === "-" || grid[wordsUse.yStart[i]][wordsUse.xStart[i]] === wordsUse.word[i][j]){
-            grid[wordsUse.yStart[i]][wordsUse.xStart[i]] = wordsUse.word[i][j]
-          } else {
-            good = false
-          }
-  
-          if (wordsUse.arrangement[i] === 0){
-            wordsUse.yStart[i]++
-          } else if (wordsUse.arrangement[i] === 1){
-            wordsUse.yStart[i]--
-          } else if (wordsUse.arrangement[i] === 2){
-            wordsUse.xStart[i]++
-          } else {
-            wordsUse.xStart[i]--
-          }
-        }
-
-        if (wordsUse.arrangement[i] === 0){
-          wordsUse.xEnd.push(wordsUse.xStart[i])
-          wordsUse.yEnd.push(wordsUse.yStart[i]-1)
-        } else if (wordsUse.arrangement[i] === 1){
-          wordsUse.xEnd.push(wordsUse.xStart[i])
-          wordsUse.yEnd.push(wordsUse.yStart[i]+1)
-        } else if (wordsUse.arrangement[i] === 2){
-          wordsUse.xEnd.push(wordsUse.xStart[i]-1)
-          wordsUse.yEnd.push(wordsUse.yStart[i])
+      for (let j = 0; j < words[randomWordIndex].length; j++) {
+        if (boxesContent[yWrite*rows + xWrite].letter === "-" || boxesContent[yWrite*rows + xWrite].letter === String(words[randomWordIndex][j])){
+          boxesContent[yWrite*rows + xWrite].letter = String(words[randomWordIndex][j])
         } else {
-          wordsUse.xEnd.push(wordsUse.xStart[i]+1)
-          wordsUse.yEnd.push(wordsUse.yStart[i])
+          repeat = true
         }
-      }
-
-      for (let i = 0; i < numWords; i++){
-        for (let j = 0; j < wordsUse.word.length; j++){
-          if (wordsUse.arrangement[i] === 0){
-            wordsUse.yStart[i]--
-          } else if (wordsUse.arrangement[i] === 1){
-              wordsUse.yStart[i]++
-          } else if (wordsUse.arrangement[i] === 2){
-              wordsUse.xStart[i]--
-          } else {
-              wordsUse.xStart[i]++
-          }
-        }
-    }
   
-    if (good === true){
-      break
-    }
-  }
-    return wordsUse
-  }
-
-  const [ wordsRandom, setWordsRandom] = useState(randomWords())
-
-
-  function randomLettersPerm(){
-    console.log("heyyyyy")
-    let letters = []
-    for (let i = 0; i < columns*rows; i++){
-      letters.push(String.fromCharCode(Math.floor(Math.random()*26) + 97))
-    }
-    return letters
-  }
-
-  const [ randomLetters, setRandomLetters ] = useState(randomLettersPerm())
-
-  console.log(randomLetters)
-
-  function createSearch(index){
-    let boxes = []
-    for(let i = 0; i < columns*rows; i++){
-      boxes.push({letters: randomLetters[i], activation: false})
-    }
-
-    for (let i = 0; i < numWords; i++){
-      for (let j = 0; j < wordsRandom.word[i].length; j++){
-
-        if (wordsRandom.arrangement[i] === 0){
-          boxes[(wordsRandom.yStart[i]+j)*rows + wordsRandom.xStart[i]].letters = wordsRandom.word[i][j]
-        } else if (wordsRandom.arrangement[i] === 1){
-          boxes[(wordsRandom.yStart[i]-j)*rows + wordsRandom.xStart[i]].letters = wordsRandom.word[i][j]
-        } else if (wordsRandom.arrangement[i] === 2){
-          boxes[wordsRandom.yStart[i]*rows + (wordsRandom.xStart[i]+j)].letters = wordsRandom.word[i][j]
+        if (arrangementIndex === 0){
+          yWrite++
+        } else if (arrangementIndex === 1) {
+          yWrite--
+        } else if (arrangementIndex === 2) {
+          xWrite++
         } else {
-          boxes[wordsRandom.yStart[i]*rows + (wordsRandom.xStart[i]-j)].letters = wordsRandom.word[i][j]
+          xWrite--
         }
+      }
+  
+      wordsChosenInitial.push({
+        word: words[randomWordIndex],
+        xStart: xStartInitial,
+        yStart: yStartInitial,
+        xEnd: xEndInitial,
+        yEnd: yEndInitial,
+        arrangement: arrangementIndex,
+        activation: false
+      })
+    }
 
+    for (let i = 0; i < rows*columns; i++) {
+      if (boxesContent[i].letter === "-") {
+        boxesContent[i].letter = letterBackground[i]
       }
     }
 
-    if (index !== null){
-      for (let i = 0; i < index.length; i++){
-        boxes[index[i]].activation = true
-      }
-      for (let i = 0; i < index.length; i++){
-        boxes[index[i]].activation = true
-      }
+    SetWordsChosen(wordsChosenInitial)
+    SetBoxes(boxesContent)
+  }
+  
+  function randomLetters(){
+    let letterBackgroundInitial = []
+    for (let k = 0; k < rows*columns; k++){
+      letterBackgroundInitial.push(String.fromCharCode(Math.floor(Math.random()*26) + 97))
     }
+    return letterBackgroundInitial
+  }
 
-    setWordSearch(boxes)
+  const [ letterBackground, setLetterBackground ] = useState(randomLetters())
+
+  function newSet(){
+    setDone(false)
+    setLetterBackground(randomLetters())
+    do {
+      setWordsAndLetters()
+    } while (repeat)
   }
 
   useEffect(() => {
-    createSearch(null)
+    newSet()
   }, [])
 
-  function startIndex(indexS){
-    indexes[0] = indexS
+  function startIndex(indexS) {
+    indexes[0][0] = indexS
   }
 
-  function endIndex(indexE){
-    indexes[1] = indexE
-    createSearch(indexes)
+  function endIndex(indexE) {
+    indexes[0][1] = indexE
+    refreshBoard()
+  }
+
+  function refreshBoard() {
+    let boxesInitial = [...boxes]
+    for (let i = 0; i < rows*columns; i++){
+      boxesInitial[i].activation = false
+    }
+    boxesInitial[indexes[0][0]].activation = true
+    boxesInitial[indexes[0][1]].activation = true
+    SetBoxes(boxesInitial)
+    checkWord()
   }
 
   function checkWord(){
-    for (let i = 0; i < numWords; i++){
-      if(wordSearch[(wordsRandom.yStart[i])*rows + wordsRandom.xStart[i]].activation === true && wordSearch[(wordsRandom.yEnd[i])*rows + wordsRandom.xEnd[i]].activation === true){
-        let wordIni = wordsRandom
-        wordIni.activation[i] = true
-        setWordsRandom(wordIni)
-        
-        let x = 0
-        let y = 0
-
-        for (let j = 0; j < wordsRandom.word[i].length; j++){
-          indexes.push((wordsRandom.yStart[i]+y)*rows + wordsRandom.xStart[i]+x)
-
-          if (wordsRandom.arrangement[i] === 0){
-            y++
-          } else if (wordsRandom.arrangement[i] === 1){
-            y--
-          } else if (wordsRandom.arrangement[i] === 2){
-            x++
+    let boxesInitial = [...boxes]
+    let wordsChosenInitial = [...wordsChosen]
+    for (let i = 0; i < wordsChosen.length; i++){
+      if (wordsChosen[i].activation === true){
+        let xWrite = wordsChosen[i].xStart
+        let yWrite = wordsChosen[i].yStart
+        for (let j = 0; j < wordsChosen[i].word.length; j++){
+          boxesInitial[yWrite*rows + xWrite].activation = true
+          if (wordsChosen[i].arrangement === 0){
+            yWrite++
+          } else if (wordsChosen[i].arrangement === 1) {
+            yWrite--
+          } else if (wordsChosen[i].arrangement === 2) {
+            xWrite++
           } else {
-            x--
+            xWrite--
           }
         }
+      } else if(boxes[wordsChosen[i].yStart*rows + wordsChosen[i].xStart].activation === true && boxes[wordsChosen[i].yEnd*rows + wordsChosen[i].xEnd].activation === true) {
+        wordsChosenInitial[i].activation = true
       }
     }
-    createSearch(indexes)
+    SetWordsChosen(wordsChosenInitial)
+    activateCompleteLetters()
   }
-  
+
+  function activateCompleteLetters(){
+    let boxesInitial = [...boxes]
+    let completeWordsCount = 0
+    for (let i = 0; i < wordsChosen.length; i++){
+      if (wordsChosen[i].activation === true){
+        completeWordsCount++
+        let xWrite = wordsChosen[i].xStart
+        let yWrite = wordsChosen[i].yStart
+        for (let j = 0; j < wordsChosen[i].word.length; j++){
+          boxesInitial[yWrite*rows + xWrite].activation = true
+          if (wordsChosen[i].arrangement === 0){
+            yWrite++
+          } else if (wordsChosen[i].arrangement === 1) {
+            yWrite--
+          } else if (wordsChosen[i].arrangement === 2) {
+            xWrite++
+          } else {
+            xWrite--
+          }
+        }
+      } 
+    }
+    console.log(completeWordsCount)
+    console.log(wordsChosen.length)
+    if (completeWordsCount === wordsChosen.length){
+      console.log(completeWordsCount)
+      setDone(true)
+    }
+    SetBoxes(boxesInitial)
+  }
+
   return (
     <>
       <div className="word-search-words-grid">
-        {wordsRandom.word.map((word, index) => {
-          if (wordsRandom.activation[index] === false){
-            return(<button className="word-search-words"> {word} </button>)
+        {wordsChosen.map((wordsChosen) => {
+          if (wordsChosen.activation === false){
+            return(<button className="word-search-words"> {wordsChosen.word} </button>)
           } else {
-            return(<button className="word-search-words-activated"> {word} </button>)
+            return(<button className="word-search-words-activated"> {wordsChosen.word} </button>)
           }
         })}
-        <button className="word-search-words" style={{width: 260, backgroundColor: "#E7BF83"}} onClick={() => checkWord()}> check </button>
+        <button className="word-search-words" style={{width: 260, backgroundColor: "#E7BF83"}} onClick={() => newSet()}> next set </button>
+        {done ? <div className="green-check"></div> : null}
       </div>
       <div className="grid">
-        {wordSearch.map((box, index) => {
+        {boxes.map((box, index) => {
           if (box.activation === false){
-            return (<button className="grid-box" onMouseDown={() => startIndex(index)} onMouseUp={() => {endIndex(index)}}> {box.letters} </button>)
+            return (<button className="grid-box" onMouseDown={() => startIndex(index)} onMouseUp={() => {endIndex(index)}}> {box.letter} </button>)
           } else {
-            return (<button className="grid-box-enlarged"> {box.letters} </button>)
+            return (<button className="grid-box-enlarged"> {box.letter} </button>)
           }
-
         })}
       </div>
     </>
@@ -359,61 +353,40 @@ function SequenceMemorization() {
 function LetterRescramble() {
   const numWords = 4
   let words = ["cat", "dog", "sun", "man", "top", "map", "pen", "box", "hat", "car", "bus", "leg", "fun", "run", "bun", "wet", "red", "big", "mix", "six", "yes", "lip", "cup", "tap", "rot", "fun", "sat", "wet", "wag", "hot", "wet", "fog", "jog", "gas", "tag", "act", "bag", "get", "pig", "dig", "fit", "kit", "nit", "sit", "bit", "kit", "zip", "yam", "yap", "yum"]
-  let lettersVault;
+  const [ wordsChosen, setWordsChosen ] = useState([])
+  const [ boxes, setBoxes ] = useState([])
   const [ lettersIn, SetLettersIn ] = useState([])
 
-  function randomWords(){
+  function randomWordsLetters(){
     let wordsChosenInitial = []
+    let lettersVault = []
+    let boxesInitial = []
 
-    for(let i = 0; i < numWords; i++){
-      let wordsIndexRandom = Math.floor(Math.random()*words.length)
-      wordsChosenInitial.push(words[wordsIndexRandom])
-  
+    for (let i = 0; i < numWords; i++) {
+      let wordIndex = Math.floor(Math.random() * words.length)
+      wordsChosenInitial.push(words[wordIndex])
     }
-  
-    lettersVault = []
-  
-    for(let i = 0; i < numWords; i++){
+
+    for(let i = 0; i < wordsChosenInitial.length; i++){
       for(let j = 0; j < wordsChosenInitial[i].length; j++){
         lettersVault.push(wordsChosenInitial[i][j])
       }
     }
-    SetRandomizedLetters(randomLetters)
-    return wordsChosenInitial
-  }
 
-  function randomLetters(){
-    let boxesInitial = []
-    while (lettersVault.length > 0){
-      let wordsIndexRandom = Math.floor(Math.random()*lettersVault.length)
-      boxesInitial.push(lettersVault[wordsIndexRandom])
-      lettersVault.splice(wordsIndexRandom, 1)
+    while (lettersVault.length > 0) {
+      let randomLetterIndex = Math.floor(Math.random() * lettersVault.length)
+      boxesInitial.push(lettersVault[randomLetterIndex])
+      lettersVault.splice(randomLetterIndex, 1)
     }
-    return boxesInitial
-  }
-
-  const [ randomizedLetters, SetRandomizedLetters] = useState([])
-
-  const [ boxes, setBoxes ] = useState([])
-
-  const [ wordsChosen, setWordsChosen] = useState(randomWords)
-
-  function newSet(){
-    let newSetInitial = randomWords()
-    setWordsChosen(newSetInitial)
-  }
-
-  function createBoxLetters(){
-    let boxesInitial = []
-    for (let i = 0; i < randomizedLetters.length; i++){
-      boxesInitial.push(randomizedLetters[i])
-    }
+    
     setBoxes(boxesInitial)
+    setWordsChosen(wordsChosenInitial)
+    SetLettersIn([])
   }
 
   useEffect(() => {
-    createBoxLetters()
-  }, [randomizedLetters])
+    randomWordsLetters()
+  }, [])
 
   function addLetter(index){
     let lettersInInitial = [...lettersIn]
@@ -443,8 +416,7 @@ function LetterRescramble() {
         let wordsChosenInitial = [...wordsChosen]
         wordsChosenInitial.splice(i, 1)
         setWordsChosen(wordsChosenInitial)
-        let lettersInInitial = []
-        SetLettersIn(lettersInInitial)
+        SetLettersIn([])
       }
     }
   }
@@ -459,20 +431,20 @@ function LetterRescramble() {
 
   return (
     <>
-      <button className="new-set" onClick={() => newSet()}> new set </button>
+      <button className="new-set" onClick={() => randomWordsLetters()}> new set </button>
       <div className="box-input">
-      {lettersIn.map((box, index) => {
-            return (<button className="box-letters-smaller" onClick={() => removeLetter(index)}> {box} </button>)
+      {lettersIn.map((letters, index) => {
+            return (<button className="box-letters-smaller" onClick={() => {removeLetter(index); completeWordCheck()}}> {letters} </button>)
         })}
       </div>
       <div className="series-words">
         {wordsChosen.map((word) => {
-              return (<button className="words"> {word} </button>)
+            return (<button className="words"> {word} </button>)
           })}
       </div>
       <div className="series-box-letters">
         {boxes.map((box, index) => {
-            return (<button className="box-letters-smaller" onClick={() => {addLetter(index); completeWordCheck()}}> {box} </button>)
+          return (<button className="box-letters-smaller" onClick={() => {addLetter(index); completeWordCheck()}}> {box} </button>)
         })}
       </div>
     </>

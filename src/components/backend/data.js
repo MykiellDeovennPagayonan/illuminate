@@ -52,6 +52,22 @@ function viewStudent(index){
   studentViewing = index
 }
 
+function prevStudent(){
+  if (studentViewing > 0){
+    studentViewing--
+  } else {
+    studentViewing = classes[classViewing].studentsList.length - 1
+  }
+}
+
+function nextStudent(){
+  if (studentViewing < classes[classViewing].studentsList.length - 1){
+    studentViewing++
+  } else {
+    studentViewing = 0
+  }
+}
+
 function addStudent(){
   classes[classViewing].studentsList.push({
     name: undefined,
@@ -112,4 +128,4 @@ function removeStudent(index){
   classes[classViewing].studentsList.splice(index, 1)
 }
 
-export { classes, classViewing, studentViewing, addClass, deleteClass, editC, checkC, editS, checkS, renameClass, viewClass, viewStudent, addStudent, removeStudent, renameStudent, editClasses, editStudents }
+export { classes, classViewing, studentViewing, addClass, deleteClass, editC, checkC, editS, checkS, renameClass, viewClass, viewStudent, prevStudent, nextStudent, addStudent, removeStudent, renameStudent, editClasses, editStudents }

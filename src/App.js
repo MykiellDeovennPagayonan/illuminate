@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { BackgroundHomePage, BackgroundClassesPage, BackgroundStudentsPage, BackgroundStatisticsPage, BackgroundGames1, BackgroundGames2, BackgroundGames22, BackgroundGames3 } from './components/background';
-import { SequenceMemorization, LetterRescramble, LineDrawing, FreeDrawing } from './components/games';
+import { WordSearch, SequenceMemorization, LetterRescramble, LineDrawing, FreeDrawing } from './components/games';
 import { Classes } from './components/classes';
 import { StudentsPage } from './components/students';
 import { StatisticsPage } from './components/statistics';
-import { WordSearch } from './components/games copy';
+import {} from './components/games copy';
 
 function App() {
   const [ pageNum, setPageNum ] = useState(1)

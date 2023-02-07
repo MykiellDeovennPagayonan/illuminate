@@ -1,5 +1,7 @@
 import React from 'react'
 import "./background.css"
+import { useState } from 'react';
+import { classes, classViewing, studentViewing, prevStudent, nextStudent } from './backend/data'
 
 function BackgroundHomePage(props) {
   return (
@@ -52,7 +54,7 @@ function BackgroundClassesPage(props) {
             </div>
             <h1 className='project-name'> Illuminate </h1>
             <div className='button-profile-series'>
-            <button className='button-profile' onClick={() => props.PageChange(1)} > Games </button>
+              <button className='button-profile' onClick={() => props.PageChange(1)} > Games </button>
               <button className='button-profile' onClick={() => props.PageChange(6)} style={{backgroundColor: "#9ad08d"}}> Classes </button>
               <button className='button-profile' onClick={() => props.PageChange(7)} > Students </button>
               <button className='button-profile' onClick={() => props.PageChange(8)} > Statistics </button>
@@ -114,34 +116,46 @@ function BackgroundStatisticsPage(props) {
 }
 
 function BackgroundGames1(props) {
+  const [ render, setRender ] = useState(1)
+
+  function rerender(){
+    setRender(num => -(num))
+  }
+
   return (
     <div className='background-outer'>
       <div className='background-inner'>
         <div className='background-home-page'>
           <div className='left-tab'>
-            <div className='logo-background'>
-            <div className="logo"></div>
-          </div>
-          <h1 className='project-name'> Illuminate </h1>
-          <div className='button-profile-series'>
-            <button className='button-profile' onClick={() => {
+            <div className="holder">
+              <h2 style={{color: "black"}}> Class Name: </h2>
+              <button className="class-name"> {classes[classViewing].name} </button>
+              <h2 style={{color: "black"}}> Student Name: </h2>
+              <button className="student-name"> {classes[classViewing].studentsList[studentViewing].name} </button>
+              <div className='select-student'>
+                <button className='prev-student' onClick={() => {prevStudent(); rerender()}}> {"<"} </button>
+                <button className='next-student' onClick={() => {nextStudent(); rerender()}}> {">"} </button>
+              </div>
+            </div>
+            <div className='button-profile-series'>
+              <button className='button-profile' onClick={() => {
                 props.PageChange(2)
                 props.GameChange(1)
                 }} style={{backgroundColor: "#9ad08d"}}> Drawing and Matching </button>
-            <button className='button-profile' onClick={() => {
+              <button className='button-profile' onClick={() => {
                 props.PageChange(3)
                 props.GameChange(1)
                 }}> Shadows </button>
-            <button className='button-profile' onClick={() => {
+              <button className='button-profile' onClick={() => {
                 props.PageChange(5)
                 props.GameChange(1)
                 }}> Models </button>
-            <button className='button-profile' style={{width: 220, height: 70}} onClick={() => {
+              <button className='button-profile' style={{width: 220, height: 70}} onClick={() => {
                 props.PageChange(1)
                 props.GameChange(1)
                 }}> Home </button>
+            </div>
           </div>
-        </div>
           <div className='main'>
             <div className='top-tab'>
               <button className='top-tab-button-game' onClick={() => props.GameChange(1)} style={props.gameNum === 1 ? {backgroundColor: "#e1c7a1"} : null}> Word Search </button>
@@ -163,10 +177,12 @@ function BackgroundGames2(props) {
       <div className='background-inner'>
         <div className='background-home-page'>
           <div className='left-tab'>
-            <div className='logo-background'>
-              <div className="logo"></div>
+            <div className="holder">
+              <h2 style={{color: "black"}}> Class Name: </h2>
+              <button className="class-name"> {classes[classViewing].name} </button>
+              <h2 style={{color: "black"}}> Student Name: </h2>
+              <button className="student-name"> {classes[classViewing].studentsList[studentViewing].name} </button>
             </div>
-            <h1 className='project-name'> Illuminate </h1>
             <div className='button-profile-series'>
               <button className='button-profile' onClick={() => {
                 props.PageChange(2)
