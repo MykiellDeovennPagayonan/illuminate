@@ -1,12 +1,13 @@
 import React, { useRef, useEffect, useState } from "react"
 import "./games.css";
+import { classes, classViewing, studentViewing } from "./backend/data";
 
 //-----------------------game 1-----------------------
 
 function WordSearch() { 
   let words = ["cat", "dog", "sun", "man", "top", "map", "pen", "box", "hat", "car", "bus", "leg", "fun", "run", "bun", "wet", "red", "big", "mix", "six", "yes", "lip", "cup", "tap", "rot", "fun", "sat", "wet", "wag", "hot", "wet", "fog", "jog", "gas", "tag", "act", "bag", "get", "pig", "dig", "fit", "kit", "nit", "sit", "bit", "kit", "zip", "yam", "yap", "yum"]
-  
-  let indexes = [[], []]
+  const [ dataHolder, setDataHolder] = useState([])
+  let indexes = []
   let numWords = 3
   const rows = 10
   const columns = 8
@@ -15,6 +16,24 @@ function WordSearch() {
   const [ wordsChosen, SetWordsChosen] = useState([])
   const [ boxes, SetBoxes] = useState([])
   const [ done, setDone ] = useState(false)
+  
+  const [ barProgress, setBarProgress ] = useState(1000)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (barProgress <= 0) {
+        if (dataHolder !== []){
+          classes[classViewing].studentsList[studentViewing].matchingAndDrawing.wordSearch.exercises.push(dataHolder)
+          setDataHolder([])
+        }
+        setBarProgress(1000)
+      } else {
+        setBarProgress(prevProgress => prevProgress - 10)
+      }
+    }, 1000)
+    return () => clearInterval(timer)
+
+  })
 
   function setWordsAndLetters(){
     repeat = false
@@ -122,11 +141,11 @@ function WordSearch() {
   }, [])
 
   function startIndex(indexS) {
-    indexes[0][0] = indexS
+    indexes[0] = indexS
   }
 
   function endIndex(indexE) {
-    indexes[0][1] = indexE
+    indexes[1] = indexE
     refreshBoard()
   }
 
@@ -135,8 +154,8 @@ function WordSearch() {
     for (let i = 0; i < rows*columns; i++){
       boxesInitial[i].activation = false
     }
-    boxesInitial[indexes[0][0]].activation = true
-    boxesInitial[indexes[0][1]].activation = true
+    boxesInitial[indexes[0]].activation = true
+    boxesInitial[indexes[1]].activation = true
     SetBoxes(boxesInitial)
     checkWord()
   }
@@ -190,10 +209,11 @@ function WordSearch() {
         }
       } 
     }
-    console.log(completeWordsCount)
-    console.log(wordsChosen.length)
+
     if (completeWordsCount === wordsChosen.length){
-      console.log(completeWordsCount)
+      let dataHolderInitial = [...dataHolder]
+      dataHolderInitial.push({wordsChosen: wordsChosen, boxes: boxes, letterBackground: letterBackground})
+      setDataHolder(dataHolderInitial)
       setDone(true)
     }
     SetBoxes(boxesInitial)
@@ -221,6 +241,9 @@ function WordSearch() {
           }
         })}
       </div>
+      <button className="timer">
+        <div className="timer-bar" style={{width: (barProgress/1000 * 1113)}}> </div>
+      </button>
     </>
   );
 }
@@ -228,11 +251,31 @@ function WordSearch() {
 //-----------------------game 2-----------------------
 
 function SequenceMemorization() {
+  const [ dataHolder, setDataHolder] = useState([])
   const [ boxes, setBoxes ] = useState([])
   const [ lettersIn, SetLettersIn ] = useState([])
   const [ show, setShow ] = useState(true)
+  const [ done, setDone ] = useState(false)
   let numLetters = 4
-  let lettersVault = ["p", "q", "t", "l", "z", "r", "b", "d"]
+  let lettersVault = ["b", "d", "p", "q", "m", "w", "n", "u", "g", "j", "z", "x", "v", "k", "f"]
+
+  const [ barProgress, setBarProgress ] = useState(1000)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (barProgress <= 0) {
+        if (dataHolder !== []){
+          classes[classViewing].studentsList[studentViewing].matchingAndDrawing.sequenceMemorization.exercises.push(dataHolder)
+          setDataHolder([])
+        }
+        setBarProgress(1000)
+      } else {
+        setBarProgress(prevProgress => prevProgress - 5)
+      }
+    }, 500)
+    return () => clearInterval(timer)
+
+  })
 
   function randomLetters(){
     let lettersChosenInitial = []
@@ -344,6 +387,9 @@ function SequenceMemorization() {
           })}
         </button> : null
       }
+      <button className="timer">
+        <div className="timer-bar" style={{width: (barProgress/1000 * 1113)}}> </div>
+      </button>
     </>
   );
 }
@@ -352,12 +398,36 @@ function SequenceMemorization() {
 
 function LetterRescramble() {
   const numWords = 4
+  const [ dataHolder, setDataHolder] = useState([])
   let words = ["cat", "dog", "sun", "man", "top", "map", "pen", "box", "hat", "car", "bus", "leg", "fun", "run", "bun", "wet", "red", "big", "mix", "six", "yes", "lip", "cup", "tap", "rot", "fun", "sat", "wet", "wag", "hot", "wet", "fog", "jog", "gas", "tag", "act", "bag", "get", "pig", "dig", "fit", "kit", "nit", "sit", "bit", "kit", "zip", "yam", "yap", "yum"]
   const [ wordsChosen, setWordsChosen ] = useState([])
   const [ boxes, setBoxes ] = useState([])
   const [ lettersIn, SetLettersIn ] = useState([])
+  const [ done, setDone ] = useState(false)
+  const [ lettersInitial, SetLettersInitial ] = useState([])
+
+  const [ barProgress, setBarProgress ] = useState(1000)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (barProgress <= 0) {
+        if (dataHolder !== []){
+          classes[classViewing].studentsList[studentViewing].matchingAndDrawing.LetterRescramble.exercises.push(dataHolder)
+          setDataHolder([])
+        }
+        setBarProgress(1000)
+      } else {
+        setBarProgress(prevProgress => prevProgress - 20)
+      }
+    }, 500)
+    return () => clearInterval(timer)
+
+  })
+
+  console.log(dataHolder)
 
   function randomWordsLetters(){
+    setDone(false)
     let wordsChosenInitial = []
     let lettersVault = []
     let boxesInitial = []
@@ -381,6 +451,7 @@ function LetterRescramble() {
     
     setBoxes(boxesInitial)
     setWordsChosen(wordsChosenInitial)
+    SetLettersInitial(boxesInitial)
     SetLettersIn([])
   }
 
@@ -407,14 +478,24 @@ function LetterRescramble() {
   }
 
   function completeWordCheck(){
+
     let wordFormed = ""
     for (let i = 0; i < lettersIn.length; i++){
       wordFormed += lettersIn[i]
     }
+
     for (let i = 0; i < wordsChosen.length; i++){
       if(wordFormed === wordsChosen[i]){
         let wordsChosenInitial = [...wordsChosen]
         wordsChosenInitial.splice(i, 1)
+
+        if (wordsChosenInitial.length === 0){
+          setDone(true)
+          let dataHolderInitial = [...dataHolder]
+          dataHolderInitial.push({wordsChosen: "1", boxes: "ha"})
+          setDataHolder(dataHolderInitial)
+        }
+
         setWordsChosen(wordsChosenInitial)
         SetLettersIn([])
       }
@@ -424,10 +505,9 @@ function LetterRescramble() {
   useEffect(() => {
     const timer = setInterval(() => {
       completeWordCheck()
-    }, 1000)
+    }, 100)
     return () => clearInterval(timer)
-
-  }, [completeWordCheck()])
+  })
 
   return (
     <>
@@ -439,14 +519,18 @@ function LetterRescramble() {
       </div>
       <div className="series-words">
         {wordsChosen.map((word) => {
-            return (<button className="words"> {word} </button>)
-          })}
+          return (<button className="words"> {word} </button>)
+        })}
+        {done ? <div className="green-check"></div> : null}
       </div>
       <div className="series-box-letters">
         {boxes.map((box, index) => {
           return (<button className="box-letters-smaller" onClick={() => {addLetter(index); completeWordCheck()}}> {box} </button>)
         })}
       </div>
+      <button className="timer">
+        <div className="timer-bar" style={{width: (barProgress/1000 * 1113)}}> </div>
+      </button>
     </>
   );
 }

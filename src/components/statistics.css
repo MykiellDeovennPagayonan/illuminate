@@ -22,3 +22,65 @@
 h2{
   color: white;
 }
+
+.statistics-body{
+  height: 950px;
+  width: 1010px;
+  position: absolute;
+  top: 105px;
+  left: 510px;
+}
+
+.statistics-games-1{
+  height: 600px;
+  width: 1010px;
+  border: 4px solid black;
+  border-radius: 25px;
+  background-color: #E7BF83;
+}
+
+.statistics-games-2{
+  margin-top: 20px;
+  height: 330px;
+  width: 1010px; 
+  border: 4px solid black;
+  border-radius: 25px;
+  background-color: #E7BF83;
+}
+
+.statistics-games-1-holder{
+  height: 580px;
+  width: 990px; 
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.statistics-games-2-holder{
+  height: 310px;
+  width: 990px; 
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr
+}
+
+.statistics-games-1-stats{
+  margin: auto;
+  height: 280px;
+  width: 485px;
+  border-radius: 15px;
+  background-color: #E4D8C6;
+  display: grid;
+  grid-template-rows: 30px 250px;
+}
+
+.statistics-games-2-stats{
+  margin: auto;
+  height: 300px;
+  width: 320px;
+  border-radius: 15px;
+  background-color: #E4D8C6;
+  display: grid;
+  grid-template-rows: 30px 270px;
+}

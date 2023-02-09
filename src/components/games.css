@@ -46,7 +46,7 @@
     color: aqua;
     position: absolute;
     width: 1250px;
-    height: 570px;
+    height: 500px;
     top: 400px;
     left: 540px;
     display: flex;
@@ -170,7 +170,6 @@
     margin: 20px;
 }
 
-
 .canvas{
     background-image: url('./resources/lineDrawing/Default.png');
     border: 4px solid black;
@@ -246,4 +245,26 @@
     margin-top: 50px;
     background-size: 100px;
     background-image: url('./resources/img/greencheck.png');
+}
+
+.timer{
+    width: 1120px;
+    height: 50px;
+    position: absolute;
+    top: 220px;
+    left: 600px;
+    background-color: white;
+    border: 4px solid black;
+    display: flex;
+    align-items: center;
+    margin: 0px;
+    padding: 0px;
+}
+
+.timer-bar{
+    height: 44px;
+    position: relative;
+    background-color: #78BC66;
+    margin: 0px;
+    padding: 0px;
 }

@@ -124,7 +124,6 @@ function addStudent(){
 addStudent()
 
 function removeStudent(index){
-  console.log("oh no")
   classes[classViewing].studentsList.splice(index, 1)
 }
 
