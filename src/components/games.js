@@ -340,6 +340,14 @@ function SequenceMemorization() {
 
   function doShow(){
     setShow(true)
+    setBarProgress(prevProgress => prevProgress - 50)
+  }
+
+  function newSet(){
+    setDone(false)
+    SetRandomizedLetters(randomLetters)
+    SetRandomizedWord(randomWord)
+    createBoxLetters()
   }
 
   function checkMatch(){
@@ -352,24 +360,30 @@ function SequenceMemorization() {
       wordToMatch += randomizedWord[i]
     }
     if (wordInBox === wordToMatch){
+      setDone(true)
       SetLettersIn([])
-      SetRandomizedLetters(randomLetters)
-      SetRandomizedWord(randomWord)
-      createBoxLetters()
+      let dataHolderInitial = [...dataHolder]
+      dataHolderInitial.push({boxes: "hi"})
+      setDataHolder(dataHolderInitial)
     }
   }
 
   useEffect(() => {
     const timer = setInterval(() => {
       checkMatch()
-    }, 100)
+    }, 500)
     return () => clearInterval(timer)
 
   }, [checkMatch])
 
   return (
     <>
-      <button className="new-set" onClick={() => doShow()}> show again </button>
+      {done ? 
+        <div>
+          <div className="green-check" style={{position: "absolute", top: 300, left: 1100}}></div>
+          <button className="new-set" onClick={() => newSet()}> new set </button>
+        </div>
+       : <button className="new-set" onClick={() => doShow()}> show again </button>}
       <div className="box-input">
         {lettersIn.map((box, index) => {
           return (<button className="box-letters-smaller" onClick={() => removeLetter(index)}> {box} </button>)
@@ -621,15 +635,12 @@ let LineDrawing = () => {
 //-----------------------game 5-----------------------
 
 let FreeDrawing = () => {
-  const [ erase, setErase ] = useState(false)
   const canvasRef = useRef(null)
   const contextRef = useRef(null)
 
-  const [isDrawing, setIsDrawing] = useState(false)
-
   useEffect(() => {
     const canvas = canvasRef.current
-    canvas.width = 900
+    canvas.width = 1200
     canvas.height = 700
 
     const context = canvas.getContext("2d");
@@ -637,75 +648,93 @@ let FreeDrawing = () => {
     context.strokeStyle = "black";
     context.lineWidth = 5;
     contextRef.current = context;
-    context.fillStyle = "azure"
-    context.fillRect(0, 0, 900, 700)
-  }, [])
 
-  const startDrawing = ({nativeEvent}) => {
-    const {offsetX, offsetY} = nativeEvent;
-    contextRef.current.beginPath();
-    if( erase === true){
-      contextRef.current.lineWidth = 20;
-    } else{
-      contextRef.current.lineWidth = 5;
+    let colors = ["#FF6EC7", "#39FF14", "#FFFF33", "#FFA64D", "#4D4DFF", "#7F00FF", "#FF3F34"]
+    let numberCircles = 12
+    let floatingLetters = []
+
+    class cirlces {
+      x;
+      y;
+      colorChoice;
+      dx;
+      radius;
+      letter;
+
+      constructor(x, y, colorChoice, letter) {
+        this.x = x
+        this.y = y
+        this.colorChoice = colorChoice
+        this.dx = 1
+        this.letter = letter
+        this.radius = 30
+      }
     }
-    contextRef.current.moveTo(offsetX, offsetY);
-    contextRef.current.lineTo(offsetX, offsetY);
-    contextRef.current.stroke();
-    setIsDrawing(true);
-    nativeEvent.preventDefault();
-  };
 
-  const draw = ({nativeEvent}) => {
-    if(!isDrawing) {
-        return;
+    for (let i = 0; i < numberCircles; i++){
+      let xIni = Math.floor(Math.random()*canvas.width)
+      let yIni = Math.floor(Math.random()*canvas.height)
+      let colorChoiceIni = colors[Math.floor(Math.random()*colors.length)]
+      let letterIni = String.fromCharCode(Math.floor(Math.random()*26) + 97)
+      let circleInitial = new cirlces(xIni, yIni, colorChoiceIni, letterIni)
+      floatingLetters.push(circleInitial)
+    }
+
+    let mouse = {
+      x: undefined,
+      y: undefined
     }
     
-    const {offsetX, offsetY} = nativeEvent;
-    contextRef.current.lineTo(offsetX, offsetY);
-    contextRef.current.stroke();
-    nativeEvent.preventDefault();
-  };
+    let draw = false
+    window.addEventListener("mousemove", function(event){
+      window.addEventListener("mousedown", function(){
+        draw = true
+      })
+      window.addEventListener("mouseup", function(){
+        draw = false
+      })
+      if (draw === true){
+      if (event.x >= 565 && event.x <= 565 + canvas.width && event.y >= 310 && event.y <= 310 + canvas.height){
+        mouse.x = event.x - 565
+        mouse.y = event.y - 310
+        }
+      } else {
+        mouse.x = undefined
+        mouse.y = undefined
+      }
+    })
 
-  const stopDrawing = () => {
-    contextRef.current.closePath();
-    setIsDrawing(false);
-  };
+    function animate(){
+      requestAnimationFrame(animate)
+      context.clearRect(0, 0, canvas.width, canvas.height)
 
-  const setToDraw = () => {
-    setErase(false)
-    contextRef.current.globalCompositeOperation = 'source-over';
-  };
+      for(let i = 0; i < numberCircles; i++){
+        context.beginPath()
+        context.arc(floatingLetters[i].x, floatingLetters[i].y, floatingLetters[i].radius, 0, Math.PI*2, true)
+        context.stroke()
+        context.fillStyle = floatingLetters[i].colorChoice
+        context.fill()
+        if (floatingLetters[i].x > canvas.width) {
+          console.log("hi")
+          floatingLetters[i].x = 0
+          floatingLetters[i].y = Math.floor(Math.random()*canvas.height)
+          floatingLetters[i].colorChoice = colors[Math.floor(Math.random()*colors.length)]
+          floatingLetters[i].letter = String.fromCharCode(Math.floor(Math.random()*26) + 97)
+        }
+        floatingLetters[i].x += floatingLetters[i].dx
+      }
+    }
 
-  const setToErase = () => {
-    setErase(true)
-    contextRef.current.globalCompositeOperation = 'destination-out';
-  };
-
-  const saveImageToLocal = (event) => {
-    let link = event.currentTarget;
-    link.setAttribute('download', 'canvas.jpg');
-    let image = canvasRef.current.toDataURL('image/jpg');
-    link.setAttribute('href', image);
-  };
+    animate()
+    
+  }, [])
 
   return (
     <>
-      <canvas className="canvas-free-draw" style={{width: 900, height: 700, margin: 0, padding: 0}}
+      <canvas className="canvas-free-draw" style={{width: 1200, height: 700, margin: 0, padding: 0}}
       ref={canvasRef}
-      onMouseDown={startDrawing}
-      onMouseMove={draw}
-      onMouseUp={stopDrawing}
-      onMouseLeave={stopDrawing}
       >
       </canvas>
-      <div>
-        <button className="draw" onClick={setToDraw}> Draw </button>
-        <button className="erase" onClick={setToErase}> Erase </button>
-        <button className="download">
-          <a id="download_image_link" href="download_link" onClick={saveImageToLocal}>Download Image</a>
-        </button>
-      </div>
     </>
   )
 }

@@ -1,12 +1,13 @@
 import React, { useRef, useEffect, useState } from "react"
 import "./games.css";
+import { classes, classViewing, studentViewing } from "./backend/data";
 
 //-----------------------game 1-----------------------
 
 function WordSearch() { 
   let words = ["cat", "dog", "sun", "man", "top", "map", "pen", "box", "hat", "car", "bus", "leg", "fun", "run", "bun", "wet", "red", "big", "mix", "six", "yes", "lip", "cup", "tap", "rot", "fun", "sat", "wet", "wag", "hot", "wet", "fog", "jog", "gas", "tag", "act", "bag", "get", "pig", "dig", "fit", "kit", "nit", "sit", "bit", "kit", "zip", "yam", "yap", "yum"]
-  
-  let indexes = [[], []]
+  const [ dataHolder, setDataHolder] = useState([])
+  let indexes = []
   let numWords = 3
   const rows = 10
   const columns = 8
@@ -14,8 +15,25 @@ function WordSearch() {
 
   const [ wordsChosen, SetWordsChosen] = useState([])
   const [ boxes, SetBoxes] = useState([])
+  const [ done, setDone ] = useState(false)
+  
+  const [ barProgress, setBarProgress ] = useState(1000)
 
-  //--------------------------
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (barProgress <= 0) {
+        if (dataHolder !== []){
+          classes[classViewing].studentsList[studentViewing].matchingAndDrawing.wordSearch.exercises.push(dataHolder)
+          setDataHolder([])
+        }
+        setBarProgress(1000)
+      } else {
+        setBarProgress(prevProgress => prevProgress - 10)
+      }
+    }, 1000)
+    return () => clearInterval(timer)
+
+  })
 
   function setWordsAndLetters(){
     repeat = false
@@ -111,6 +129,7 @@ function WordSearch() {
   const [ letterBackground, setLetterBackground ] = useState(randomLetters())
 
   function newSet(){
+    setDone(false)
     setLetterBackground(randomLetters())
     do {
       setWordsAndLetters()
@@ -122,13 +141,11 @@ function WordSearch() {
   }, [])
 
   function startIndex(indexS) {
-    indexes[0][0] = indexS
-    console.log(indexS)
+    indexes[0] = indexS
   }
 
   function endIndex(indexE) {
-    indexes[0][1] = indexE
-    console.log(indexE)
+    indexes[1] = indexE
     refreshBoard()
   }
 
@@ -137,8 +154,8 @@ function WordSearch() {
     for (let i = 0; i < rows*columns; i++){
       boxesInitial[i].activation = false
     }
-    boxesInitial[indexes[0][0]].activation = true
-    boxesInitial[indexes[0][1]].activation = true
+    boxesInitial[indexes[0]].activation = true
+    boxesInitial[indexes[1]].activation = true
     SetBoxes(boxesInitial)
     checkWord()
   }
@@ -152,7 +169,6 @@ function WordSearch() {
         let yWrite = wordsChosen[i].yStart
         for (let j = 0; j < wordsChosen[i].word.length; j++){
           boxesInitial[yWrite*rows + xWrite].activation = true
-          console.log("hi")
           if (wordsChosen[i].arrangement === 0){
             yWrite++
           } else if (wordsChosen[i].arrangement === 1) {
@@ -167,20 +183,20 @@ function WordSearch() {
         wordsChosenInitial[i].activation = true
       }
     }
-    console.log(wordsChosenInitial)
     SetWordsChosen(wordsChosenInitial)
     activateCompleteLetters()
   }
 
   function activateCompleteLetters(){
     let boxesInitial = [...boxes]
+    let completeWordsCount = 0
     for (let i = 0; i < wordsChosen.length; i++){
       if (wordsChosen[i].activation === true){
+        completeWordsCount++
         let xWrite = wordsChosen[i].xStart
         let yWrite = wordsChosen[i].yStart
         for (let j = 0; j < wordsChosen[i].word.length; j++){
           boxesInitial[yWrite*rows + xWrite].activation = true
-          console.log("hi")
           if (wordsChosen[i].arrangement === 0){
             yWrite++
           } else if (wordsChosen[i].arrangement === 1) {
@@ -192,6 +208,13 @@ function WordSearch() {
           }
         }
       } 
+    }
+
+    if (completeWordsCount === wordsChosen.length){
+      let dataHolderInitial = [...dataHolder]
+      dataHolderInitial.push({wordsChosen: wordsChosen, boxes: boxes, letterBackground: letterBackground})
+      setDataHolder(dataHolderInitial)
+      setDone(true)
     }
     SetBoxes(boxesInitial)
   }
@@ -207,6 +230,7 @@ function WordSearch() {
           }
         })}
         <button className="word-search-words" style={{width: 260, backgroundColor: "#E7BF83"}} onClick={() => newSet()}> next set </button>
+        {done ? <div className="green-check"></div> : null}
       </div>
       <div className="grid">
         {boxes.map((box, index) => {
@@ -217,6 +241,9 @@ function WordSearch() {
           }
         })}
       </div>
+      <button className="timer">
+        <div className="timer-bar" style={{width: (barProgress/1000 * 1113)}}> </div>
+      </button>
     </>
   );
 }
@@ -224,10 +251,159 @@ function WordSearch() {
 //-----------------------game 2-----------------------
 
 function SequenceMemorization() {
+  const [ dataHolder, setDataHolder] = useState([])
+  const [ boxes, setBoxes ] = useState([])
+  const [ lettersIn, SetLettersIn ] = useState([])
+  const [ show, setShow ] = useState(true)
+  const [ done, setDone ] = useState(false)
+  let numLetters = 4
+  let lettersVault = ["b", "d", "p", "q", "m", "w", "n", "u", "g", "j", "z", "x", "v", "k", "f"]
+
+  const [ barProgress, setBarProgress ] = useState(1000)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (barProgress <= 0) {
+        if (dataHolder !== []){
+          classes[classViewing].studentsList[studentViewing].matchingAndDrawing.sequenceMemorization.exercises.push(dataHolder)
+          setDataHolder([])
+        }
+        setBarProgress(1000)
+      } else {
+        setBarProgress(prevProgress => prevProgress - 5)
+      }
+    }, 500)
+    return () => clearInterval(timer)
+
+  })
+
+  function randomLetters(){
+    let lettersChosenInitial = []
+
+    for (let i = 0; i < numLetters; i++){
+      let randomLetterIndex = Math.floor(Math.random()*lettersVault.length)
+      lettersChosenInitial.push(lettersVault[randomLetterIndex])
+    }
   
+    return lettersChosenInitial
+  }
+
+  function randomWord(){
+    let lettersChooseFrom = [...randomizedLetters]
+    let wordInitial = []
+    while (lettersChooseFrom.length > 0){
+      let wordsIndexRandom = Math.floor(Math.random()*lettersChooseFrom.length)
+      wordInitial.push(lettersChooseFrom[wordsIndexRandom])
+      lettersChooseFrom.splice(wordsIndexRandom, 1)
+    }
+    setShow(true)
+    return wordInitial
+  }
+
+  const [ randomizedLetters, SetRandomizedLetters] = useState(randomLetters)
+
+  const [ randomizedWord, SetRandomizedWord] = useState(randomWord)
+
+  function createBoxLetters(){
+    let boxesInitial = []
+    for (let i = 0; i < randomizedLetters.length; i++){
+      boxesInitial.push(randomizedLetters[i])
+    }
+    setBoxes(boxesInitial)
+  }
+
+  useEffect(() => {
+    createBoxLetters()
+  }, [])
+
+  function addLetter(index){
+    let lettersInInitial = [...lettersIn]
+    let boxesInitial = [...boxes]
+    boxesInitial.splice(index, 1)
+    lettersInInitial.push(boxes[index])
+    SetLettersIn(lettersInInitial)
+    setBoxes(boxesInitial)
+  }
+
+  function removeLetter(index){
+    let lettersInInitial = [...lettersIn]
+    let boxesInitial = [...boxes]
+    boxesInitial.push(lettersInInitial[index])
+    lettersInInitial.splice(index, 1)
+    SetLettersIn(lettersInInitial)
+    setBoxes(boxesInitial)
+  }
+
+  function dontShow(){
+    setShow(false)
+  }
+
+  function doShow(){
+    setShow(true)
+    setBarProgress(prevProgress => prevProgress - 50)
+  }
+
+  function newSet(){
+    setDone(false)
+    SetRandomizedLetters(randomLetters)
+    SetRandomizedWord(randomWord)
+    createBoxLetters()
+  }
+
+  function checkMatch(){
+    let wordInBox = ""
+    let wordToMatch = ""
+    for (let i = 0; i < lettersIn.length; i++){
+      wordInBox += lettersIn[i]
+    }
+    for (let i = 0; i < randomizedWord.length; i++){
+      wordToMatch += randomizedWord[i]
+    }
+    if (wordInBox === wordToMatch){
+      setDone(true)
+      SetLettersIn([])
+      let dataHolderInitial = [...dataHolder]
+      dataHolderInitial.push({boxes: "hi"})
+      setDataHolder(dataHolderInitial)
+    }
+  }
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      checkMatch()
+    }, 500)
+    return () => clearInterval(timer)
+
+  }, [checkMatch])
 
   return (
     <>
+      {done ? 
+        <div>
+          <div className="green-check" style={{position: "absolute", top: 300, left: 1100}}></div>
+          <button className="new-set" onClick={() => newSet()}> new set </button>
+        </div>
+       : <button className="new-set" onClick={() => doShow()}> show again </button>}
+      <div className="box-input">
+        {lettersIn.map((box, index) => {
+          return (<button className="box-letters-smaller" onClick={() => removeLetter(index)}> {box} </button>)
+        })}
+      </div>
+      <div className="series-box-letters">
+        {boxes.map((box, index) => {
+            return (<button className="box-letters" onClick={() => {addLetter(index); checkMatch()}}> {box} </button>)
+        })}
+      </div>
+      {show ? 
+        <button className="word-sequence" onClick={() => dontShow()}>
+          {randomizedWord.map((box) => {
+            return (<button className="box-letters"> {box} </button>)
+          })}
+        </button> : null
+      }
+      <button className="timer">
+        <div className="timer-bar" style={{width: (barProgress/1000 * 1113)}}> </div>
+      </button>
     </>
   );
 }
@@ -236,12 +412,36 @@ function SequenceMemorization() {
 
 function LetterRescramble() {
   const numWords = 4
+  const [ dataHolder, setDataHolder] = useState([])
   let words = ["cat", "dog", "sun", "man", "top", "map", "pen", "box", "hat", "car", "bus", "leg", "fun", "run", "bun", "wet", "red", "big", "mix", "six", "yes", "lip", "cup", "tap", "rot", "fun", "sat", "wet", "wag", "hot", "wet", "fog", "jog", "gas", "tag", "act", "bag", "get", "pig", "dig", "fit", "kit", "nit", "sit", "bit", "kit", "zip", "yam", "yap", "yum"]
   const [ wordsChosen, setWordsChosen ] = useState([])
   const [ boxes, setBoxes ] = useState([])
   const [ lettersIn, SetLettersIn ] = useState([])
+  const [ done, setDone ] = useState(false)
+  const [ lettersInitial, SetLettersInitial ] = useState([])
+
+  const [ barProgress, setBarProgress ] = useState(1000)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (barProgress <= 0) {
+        if (dataHolder !== []){
+          classes[classViewing].studentsList[studentViewing].matchingAndDrawing.LetterRescramble.exercises.push(dataHolder)
+          setDataHolder([])
+        }
+        setBarProgress(1000)
+      } else {
+        setBarProgress(prevProgress => prevProgress - 20)
+      }
+    }, 500)
+    return () => clearInterval(timer)
+
+  })
+
+  console.log(dataHolder)
 
   function randomWordsLetters(){
+    setDone(false)
     let wordsChosenInitial = []
     let lettersVault = []
     let boxesInitial = []
@@ -265,6 +465,7 @@ function LetterRescramble() {
     
     setBoxes(boxesInitial)
     setWordsChosen(wordsChosenInitial)
+    SetLettersInitial(boxesInitial)
     SetLettersIn([])
   }
 
@@ -291,14 +492,24 @@ function LetterRescramble() {
   }
 
   function completeWordCheck(){
+
     let wordFormed = ""
     for (let i = 0; i < lettersIn.length; i++){
       wordFormed += lettersIn[i]
     }
+
     for (let i = 0; i < wordsChosen.length; i++){
       if(wordFormed === wordsChosen[i]){
         let wordsChosenInitial = [...wordsChosen]
         wordsChosenInitial.splice(i, 1)
+
+        if (wordsChosenInitial.length === 0){
+          setDone(true)
+          let dataHolderInitial = [...dataHolder]
+          dataHolderInitial.push({wordsChosen: "1", boxes: "ha"})
+          setDataHolder(dataHolderInitial)
+        }
+
         setWordsChosen(wordsChosenInitial)
         SetLettersIn([])
       }
@@ -308,10 +519,9 @@ function LetterRescramble() {
   useEffect(() => {
     const timer = setInterval(() => {
       completeWordCheck()
-    }, 1000)
+    }, 100)
     return () => clearInterval(timer)
-
-  }, [completeWordCheck()])
+  })
 
   return (
     <>
@@ -323,14 +533,18 @@ function LetterRescramble() {
       </div>
       <div className="series-words">
         {wordsChosen.map((word) => {
-            return (<button className="words"> {word} </button>)
-          })}
+          return (<button className="words"> {word} </button>)
+        })}
+        {done ? <div className="green-check"></div> : null}
       </div>
       <div className="series-box-letters">
         {boxes.map((box, index) => {
           return (<button className="box-letters-smaller" onClick={() => {addLetter(index); completeWordCheck()}}> {box} </button>)
         })}
       </div>
+      <button className="timer">
+        <div className="timer-bar" style={{width: (barProgress/1000 * 1113)}}> </div>
+      </button>
     </>
   );
 }
@@ -454,9 +668,9 @@ let FreeDrawing = () => {
     contextRef.current.stroke();
     setIsDrawing(true);
     nativeEvent.preventDefault();
-};
+  };
 
-const draw = ({nativeEvent}) => {
+  const draw = ({nativeEvent}) => {
     if(!isDrawing) {
         return;
     }
@@ -465,29 +679,29 @@ const draw = ({nativeEvent}) => {
     contextRef.current.lineTo(offsetX, offsetY);
     contextRef.current.stroke();
     nativeEvent.preventDefault();
-};
+  };
 
-const stopDrawing = () => {
+  const stopDrawing = () => {
     contextRef.current.closePath();
     setIsDrawing(false);
-};
+  };
 
-const setToDraw = () => {
-  setErase(false)
-  contextRef.current.globalCompositeOperation = 'source-over';
-};
+  const setToDraw = () => {
+    setErase(false)
+    contextRef.current.globalCompositeOperation = 'source-over';
+  };
 
-const setToErase = () => {
-  setErase(true)
-  contextRef.current.globalCompositeOperation = 'destination-out';
-};
+  const setToErase = () => {
+    setErase(true)
+    contextRef.current.globalCompositeOperation = 'destination-out';
+  };
 
-const saveImageToLocal = (event) => {
-  let link = event.currentTarget;
-  link.setAttribute('download', 'canvas.jpg');
-  let image = canvasRef.current.toDataURL('image/jpg');
-  link.setAttribute('href', image);
-};
+  const saveImageToLocal = (event) => {
+    let link = event.currentTarget;
+    link.setAttribute('download', 'canvas.jpg');
+    let image = canvasRef.current.toDataURL('image/jpg');
+    link.setAttribute('href', image);
+  };
 
   return (
     <>

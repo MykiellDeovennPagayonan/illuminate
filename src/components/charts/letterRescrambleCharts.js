@@ -33,7 +33,7 @@ export default function LetterRescrambleChart() {
       }}
     >
       <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="attemp" />
+      <XAxis dataKey="attempt" />
       <YAxis />
       <Tooltip />
       <Bar dataKey="completed" fill="#8884d8" />
