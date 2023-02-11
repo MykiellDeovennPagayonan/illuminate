@@ -637,104 +637,189 @@ let LineDrawing = () => {
 let FreeDrawing = () => {
   const canvasRef = useRef(null)
   const contextRef = useRef(null)
+  const [ dataHolder, setDataHolder] = useState(0)
+  const [ lettersChosen, setLettersChosen ] = useState([])
+  const numLetters = 4
+  const [ score, setScore ] = useState(0)
+  const [ begin, setBegin ] = useState(false)  
+
+  const [ barProgress, setBarProgress ] = useState(1000)
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    canvas.width = 1200
-    canvas.height = 700
-
-    const context = canvas.getContext("2d");
-    context.lineCap = "round";
-    context.strokeStyle = "black";
-    context.lineWidth = 5;
-    contextRef.current = context;
-
-    let colors = ["#FF6EC7", "#39FF14", "#FFFF33", "#FFA64D", "#4D4DFF", "#7F00FF", "#FF3F34"]
-    let numberCircles = 12
-    let floatingLetters = []
-
-    class cirlces {
-      x;
-      y;
-      colorChoice;
-      dx;
-      radius;
-      letter;
-
-      constructor(x, y, colorChoice, letter) {
-        this.x = x
-        this.y = y
-        this.colorChoice = colorChoice
-        this.dx = 1
-        this.letter = letter
-        this.radius = 30
-      }
-    }
-
-    for (let i = 0; i < numberCircles; i++){
-      let xIni = Math.floor(Math.random()*canvas.width)
-      let yIni = Math.floor(Math.random()*canvas.height)
-      let colorChoiceIni = colors[Math.floor(Math.random()*colors.length)]
-      let letterIni = String.fromCharCode(Math.floor(Math.random()*26) + 97)
-      let circleInitial = new cirlces(xIni, yIni, colorChoiceIni, letterIni)
-      floatingLetters.push(circleInitial)
-    }
-
-    let mouse = {
-      x: undefined,
-      y: undefined
-    }
-    
-    let draw = false
-    window.addEventListener("mousemove", function(event){
-      window.addEventListener("mousedown", function(){
-        draw = true
-      })
-      window.addEventListener("mouseup", function(){
-        draw = false
-      })
-      if (draw === true){
-      if (event.x >= 565 && event.x <= 565 + canvas.width && event.y >= 310 && event.y <= 310 + canvas.height){
-        mouse.x = event.x - 565
-        mouse.y = event.y - 310
+    const timer = setInterval(() => {
+      if (begin === true) {
+        if (barProgress <= 0) {
+          if (dataHolder !== 0) {
+            classes[classViewing].studentsList[studentViewing].matchingAndDrawing.LetterRescramble.exercises.push(dataHolder)
+            setDataHolder([])
+          }
+          setBarProgress(1000)
+        } else {
+          setBarProgress(prevProgress => prevProgress - 5)
         }
-      } else {
-        mouse.x = undefined
-        mouse.y = undefined
       }
-    })
+    }, 500)
+    return () => clearInterval(timer)
+  })
 
-    function animate(){
-      requestAnimationFrame(animate)
-      context.clearRect(0, 0, canvas.width, canvas.height)
+  function newSet() {
+    setBegin(true)
+    lettersSet()
+  }
 
-      for(let i = 0; i < numberCircles; i++){
-        context.beginPath()
-        context.arc(floatingLetters[i].x, floatingLetters[i].y, floatingLetters[i].radius, 0, Math.PI*2, true)
-        context.stroke()
-        context.fillStyle = floatingLetters[i].colorChoice
-        context.fill()
-        if (floatingLetters[i].x > canvas.width) {
-          console.log("hi")
-          floatingLetters[i].x = 0
-          floatingLetters[i].y = Math.floor(Math.random()*canvas.height)
-          floatingLetters[i].colorChoice = colors[Math.floor(Math.random()*colors.length)]
-          floatingLetters[i].letter = String.fromCharCode(Math.floor(Math.random()*26) + 97)
+  function lettersSet(){
+    let lettersChosenInitial = []
+
+    for (let i = 0; i < numLetters; i++) {
+      let match = false
+      let letter;
+
+      do {
+        match = false
+        letter = String.fromCharCode(Math.floor(Math.random()*26) + 97)
+        
+        for (let i = 0; i < lettersChosenInitial.length; i++) {
+          if (letter === lettersChosenInitial[i]){
+            match = true
+          }
         }
-        floatingLetters[i].x += floatingLetters[i].dx
-      }
+
+      } while (match === true)
+
+      lettersChosenInitial.push(letter)
     }
 
-    animate()
-    
-  }, [])
+    setLettersChosen(lettersChosenInitial)
+
+    function runCanvas() {
+      const canvas = canvasRef.current
+      canvas.width = 1050
+      canvas.height = 700
+  
+      const context = canvas.getContext("2d");
+      context.strokeStyle = "black";
+      context.lineWidth = 5;
+      contextRef.current = context;
+  
+      let colors = ["#FF69B4", "#FFA07A", "#FFFF00", "#32CD32", "#00BFFF"];
+      let numberCircles = 20
+      let floatingLetters = []
+  
+      class cirlces {
+        x;
+        y;
+        colorChoice;
+        dx;
+        radius;
+        letter;
+  
+        respawn(){
+          this.x = Math.floor(Math.random()* - 200)
+          this.y = Math.floor(Math.random()*canvas.height)
+          this.colorChoice = colors[Math.floor(Math.random()*colors.length)]
+          this.letter = String.fromCharCode(Math.floor(Math.random()*26) + 97)
+        }
+  
+        constructor(x, y, colorChoice, letter) {
+          this.x = x
+          this.y = y
+          this.colorChoice = colorChoice
+          this.dx = 1
+          this.letter = letter
+          this.radius = 30
+        }
+      }
+  
+      for (let i = 0; i < numberCircles; i++){
+        let xIni = Math.floor(Math.random()*canvas.width)
+        let yIni = Math.floor(Math.random()*canvas.height)
+        let colorChoiceIni = colors[Math.floor(Math.random()*colors.length)]
+        let letterIni = String.fromCharCode(Math.floor(Math.random()*26) + 97)
+        let circleInitial = new cirlces(xIni, yIni, colorChoiceIni, letterIni)
+        floatingLetters.push(circleInitial)
+      }
+  
+      let mouse = {
+        x: undefined,
+        y: undefined
+      }
+      
+      let draw = false
+      window.addEventListener("mousemove", function(event){
+        window.addEventListener("mousedown", function(){
+          draw = true
+          if (event.x >= 565 && event.x <= 565 + canvas.width && event.y >= 310 && event.y <= 310 + canvas.height){
+            mouse.x = event.x - 565
+            mouse.y = event.y - 310
+            }
+        })
+        window.addEventListener("mouseup", function(){
+          draw = false
+        })
+        if (draw === true){
+          if (event.x >= 565 && event.x <= 565 + canvas.width && event.y >= 310 && event.y <= 310 + canvas.height){
+            mouse.x = event.x - 565
+            mouse.y = event.y - 310
+          }
+        } else {
+          mouse.x = undefined
+          mouse.y = undefined
+        }
+      })
+  
+      function animate(){
+        requestAnimationFrame(animate)
+        context.clearRect(0, 0, canvas.width, canvas.height)
+  
+        for(let i = 0; i < numberCircles; i++){
+          context.beginPath()
+          context.arc(floatingLetters[i].x, floatingLetters[i].y, floatingLetters[i].radius, 0, Math.PI*2, true)
+          context.stroke()
+          context.fillStyle = floatingLetters[i].colorChoice
+          context.fill()
+          context.fillStyle = "black"
+          context.font = "bold 32px sans-serif"
+  
+          context.fillText(floatingLetters[i].letter, floatingLetters[i].x - 8, floatingLetters[i].y + 7)
+          if (floatingLetters[i].x > canvas.width) {
+            floatingLetters[i].respawn()
+          }
+  
+          if ((floatingLetters[i].x - mouse.x < 30 && mouse.x - floatingLetters[i].x < 30) && (floatingLetters[i].y - mouse.y < 30 && mouse.y - floatingLetters[i].y < 30)) {
+            console.log(lettersChosenInitial)
+            for (let j = 0; j < lettersChosenInitial.length; j++){
+              if (floatingLetters[i].letter === lettersChosenInitial[j]){
+                setScore(prevScore => prevScore + 1)
+              }
+            }
+            floatingLetters[i].respawn()
+          }
+  
+          floatingLetters[i].x += floatingLetters[i].dx
+        }
+      }
+      animate()
+    }
+
+    runCanvas()
+  }
 
   return (
     <>
-      <canvas className="canvas-free-draw" style={{width: 1200, height: 700, margin: 0, padding: 0}}
+      <div className="letters-and-score">
+        <button className="score"> {score} </button>
+        {lettersChosen.map((letter) => {
+          return (<button className="letters"> {letter} </button>)
+        })}
+        <button className="score" style={{backgroundColor: "white", fontSize: 20}} onClick={() => {newSet()}}> New Set </button>
+      </div>
+      <canvas className="canvas-free-draw" style={{width: 1050, height: 700, margin: 0, padding: 0}}
       ref={canvasRef}
       >
       </canvas>
+      <button className="timer">
+        <div className="timer-bar" style={{width: (barProgress/1000 * 1113)}}> </div>
+      </button>
     </>
   )
 }
