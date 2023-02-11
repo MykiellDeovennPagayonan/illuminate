@@ -653,9 +653,12 @@ let FreeDrawing = () => {
             classes[classViewing].studentsList[studentViewing].matchingAndDrawing.LetterRescramble.exercises.push(dataHolder)
             setDataHolder([])
           }
+          setBegin(false)
+          setScore(0)
+          setLettersChosen()
           setBarProgress(1000)
         } else {
-          setBarProgress(prevProgress => prevProgress - 5)
+          setBarProgress(prevProgress => prevProgress - 20)
         }
       }
     }, 500)
@@ -664,6 +667,7 @@ let FreeDrawing = () => {
 
   function newSet() {
     setBegin(true)
+    setScore(0)
     lettersSet()
   }
 
@@ -702,7 +706,8 @@ let FreeDrawing = () => {
       contextRef.current = context;
   
       let colors = ["#FF69B4", "#FFA07A", "#FFFF00", "#32CD32", "#00BFFF"];
-      let numberCircles = 20
+      let numberCircles = 30
+      let lettersIn = 0
       let floatingLetters = []
   
       class cirlces {
@@ -713,9 +718,9 @@ let FreeDrawing = () => {
         radius;
         letter;
   
-        respawn(){
-          this.x = Math.floor(Math.random()* - 200)
-          this.y = Math.floor(Math.random()*canvas.height)
+        respawn(x, y){
+          this.x = x
+          this.y = y
           this.colorChoice = colors[Math.floor(Math.random()*colors.length)]
           this.letter = String.fromCharCode(Math.floor(Math.random()*26) + 97)
         }
@@ -724,17 +729,43 @@ let FreeDrawing = () => {
           this.x = x
           this.y = y
           this.colorChoice = colorChoice
-          this.dx = 1
+          this.dx = .5
           this.letter = letter
           this.radius = 30
         }
       }
   
       for (let i = 0; i < numberCircles; i++){
-        let xIni = Math.floor(Math.random()*canvas.width)
-        let yIni = Math.floor(Math.random()*canvas.height)
+        let repeat;
+        let xIni;
+        let yIni;
+
+        do {
+          repeat = false
+
+          xIni = Math.floor(Math.random()*canvas.width)
+          yIni = Math.floor(Math.random()*canvas.height)
+
+          for (let k = 0; k < floatingLetters.length; k++){
+            if ((floatingLetters[k].x - xIni < 30 && xIni - floatingLetters[k].x < 30) && (floatingLetters[k].y - yIni < 30 && yIni - floatingLetters[k].y < 30)) {
+              repeat = true
+            }
+          }
+        } while (repeat)
+
         let colorChoiceIni = colors[Math.floor(Math.random()*colors.length)]
         let letterIni = String.fromCharCode(Math.floor(Math.random()*26) + 97)
+
+        if (lettersIn < 4) {
+          letterIni = lettersChosenInitial[Math.floor(Math.random()*lettersChosenInitial.length)]
+        }
+
+        for (let j = 0; j < lettersChosenInitial.length; j++) {
+          if (letterIni === lettersChosenInitial[j]) {
+            lettersIn++
+          }
+        }
+
         let circleInitial = new cirlces(xIni, yIni, colorChoiceIni, letterIni)
         floatingLetters.push(circleInitial)
       }
@@ -746,18 +777,18 @@ let FreeDrawing = () => {
       
       let draw = false
       window.addEventListener("mousemove", function(event){
-        window.addEventListener("mousedown", function(){
+        window.addEventListener("mousedown", function() {
           draw = true
-          if (event.x >= 565 && event.x <= 565 + canvas.width && event.y >= 310 && event.y <= 310 + canvas.height){
+          if (event.x >= 565 && event.x <= 565 + canvas.width && event.y >= 310 && event.y <= 310 + canvas.height) {
             mouse.x = event.x - 565
             mouse.y = event.y - 310
             }
         })
-        window.addEventListener("mouseup", function(){
+        window.addEventListener("mouseup", function() {
           draw = false
         })
         if (draw === true){
-          if (event.x >= 565 && event.x <= 565 + canvas.width && event.y >= 310 && event.y <= 310 + canvas.height){
+          if (event.x >= 565 && event.x <= 565 + canvas.width && event.y >= 310 && event.y <= 310 + canvas.height) {
             mouse.x = event.x - 565
             mouse.y = event.y - 310
           }
@@ -782,17 +813,63 @@ let FreeDrawing = () => {
   
           context.fillText(floatingLetters[i].letter, floatingLetters[i].x - 8, floatingLetters[i].y + 7)
           if (floatingLetters[i].x > canvas.width) {
-            floatingLetters[i].respawn()
+            for (let j = 0; j < lettersChosenInitial.length; j++) {
+              if (floatingLetters[i].letter === lettersChosenInitial[j]) {
+                lettersIn--
+              }
+            }
+            let repeat;
+            let x;
+            let y;
+
+            do {
+              repeat = false
+
+              x = Math.floor(Math.random()* - 200)
+              y = Math.floor(Math.random()*canvas.height)
+  
+              for (let k = 0; k < numberCircles; k++){
+                if ((floatingLetters[k].x - x < 70 && x - floatingLetters[k].x < 70) && (floatingLetters[k].y - y < 70 && y - floatingLetters[k].y < 70)) {
+                  repeat = true
+                }
+              }
+            } while (repeat)
+
+            floatingLetters[i].respawn(x, y)
           }
   
           if ((floatingLetters[i].x - mouse.x < 30 && mouse.x - floatingLetters[i].x < 30) && (floatingLetters[i].y - mouse.y < 30 && mouse.y - floatingLetters[i].y < 30)) {
-            console.log(lettersChosenInitial)
-            for (let j = 0; j < lettersChosenInitial.length; j++){
-              if (floatingLetters[i].letter === lettersChosenInitial[j]){
+            let notChosen = true
+            for (let j = 0; j < lettersChosenInitial.length; j++) {
+              if (floatingLetters[i].letter === lettersChosenInitial[j]) {
+                notChosen = false
                 setScore(prevScore => prevScore + 1)
+                lettersIn--
               }
             }
-            floatingLetters[i].respawn()
+
+            if (notChosen === true) {
+              setScore(prevScore => prevScore - 1)
+            }
+
+            let repeat;
+            let x;
+            let y;
+
+            do {
+              repeat = false
+
+              x = Math.floor(Math.random()* - 200)
+              y = Math.floor(Math.random()*canvas.height)
+  
+              for (let k = 0; k < numberCircles; k++){
+                if ((floatingLetters[k].x - x < 70 && x - floatingLetters[k].x < 70) && (floatingLetters[k].y - y < 70 && y - floatingLetters[k].y < 70)) {
+                  repeat = true
+                }
+              }
+            } while (repeat)
+
+            floatingLetters[i].respawn(x, y)
           }
   
           floatingLetters[i].x += floatingLetters[i].dx

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { BackgroundHomePage, BackgroundClassesPage, BackgroundStudentsPage, BackgroundStatisticsPage, BackgroundGames1, BackgroundGames2, BackgroundGames22, BackgroundGames3 } from './components/background';
+import { BackgroundHomePage, BackgroundClassesPage, BackgroundStudentsPage, BackgroundStatisticsPage, BackgroundGames1, BackgroundGames2, BackgroundGames3 } from './components/background';
 import { WordSearch, SequenceMemorization, LetterRescramble, LineDrawing, FreeDrawing } from './components/games';
 import { Classes } from './components/classes';
 import { StudentsPage } from './components/students';
@@ -25,11 +25,6 @@ function App() {
         {gameNum === 2 ? <></> : null}
         {gameNum === 3 ? <></> : null}
       </div>: null}
-      {pageNum === 4 ? <div><BackgroundGames22 PageChange = {pageNum => setPageNum(pageNum)} gameNum={gameNum}/>
-        {gameNum === 1 ? <></> : null}
-        {gameNum === 2 ? <></> : null}
-        {gameNum === 3 ? <></> : null}
-      </div> : null}
       {pageNum === 5 ? <div><BackgroundGames3 PageChange = {pageNum => setPageNum(pageNum)} />
       </div> : null}
       {pageNum === 6 ? <div><BackgroundClassesPage PageChange = {pageNum => setPageNum(pageNum)} /> <Classes PageChange = {pageNum => setPageNum(pageNum)}/>

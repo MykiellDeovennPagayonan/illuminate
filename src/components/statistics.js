@@ -7,11 +7,6 @@ import LetterRescrambleChart from "./charts/letterRescrambleCharts";
 import RedrawChart from "./charts/redrawCharts";
 
 function StatisticsPage() {
-  const [ render, setRender ] = useState(1)
-
-  function rerender(){
-    setRender(num => -(num))
-  }
 
   return (
     <div>
