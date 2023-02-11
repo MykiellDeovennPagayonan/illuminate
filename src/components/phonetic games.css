@@ -1,0 +1,65 @@
+.boxes-holder{
+  width: 660px;
+  height: 660px;
+  position: absolute;
+  top: 300px;
+  left: 700px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.letter{
+  width: 200px;
+  height: 200px;
+  margin: auto;
+  background-color: bisque;
+  border: 5px solid black;
+  border-radius: 25px;
+  font-size: 70px;
+  font-weight: bold;
+}
+
+.buttons{
+  width: 300px;
+  height: 600px;
+  position: absolute;
+  top: 300px;
+  left: 1450px;
+  background-color: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.listen, .next-set{
+  width: 200px;
+  height: 120px;
+  margin-top: 20px;
+  background-color: #9ad08d;
+  border: 5px solid black;
+  border-radius: 25px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.syllables{
+  width: 115px;
+  height: 115px;
+  margin: auto;
+  background-color: bisque;
+  border: 5px solid black;
+  border-radius: 25px;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.word{
+  width: 200px;
+  height: 200px;
+  margin: auto;
+  background-color: bisque;
+  border: 5px solid black;
+  border-radius: 25px;
+  font-size: 40px;
+  font-weight: bold;
+}

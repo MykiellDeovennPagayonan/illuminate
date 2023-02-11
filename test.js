@@ -1,21 +1,9 @@
-let x = 4
-let y = x
-y = 3
+let arr = [1, 2, 3, 4, 5];
 
-console.log(x)
-console.log(y)
+// Generate a random index within the current length of the array
+let randomIndex = Math.floor(Math.random() * arr.length + 1);
 
+// Insert the new element at the random index
+arr.splice(randomIndex, 0, "hello");
 
-function ops(){
-    for(let i = 0; i < 30; i++){
-        console.log(i)
-        if (i === 15){
-            break;
-        }
-    }
-    console.log('ohhh')
-}
-
-for(let i = 0; i < 3; i++){
-    ops()
-}
+console.log(arr);

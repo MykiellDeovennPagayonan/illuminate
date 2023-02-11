@@ -5,7 +5,7 @@ import { classes, classViewing, studentViewing } from "./backend/data";
 //-----------------------game 1-----------------------
 
 function WordSearch() { 
-  let words = ["cat", "dog", "sun", "man", "top", "map", "pen", "box", "hat", "car", "bus", "leg", "fun", "run", "bun", "wet", "red", "big", "mix", "six", "yes", "lip", "cup", "tap", "rot", "fun", "sat", "wet", "wag", "hot", "wet", "fog", "jog", "gas", "tag", "act", "bag", "get", "pig", "dig", "fit", "kit", "nit", "sit", "bit", "kit", "zip", "yam", "yap", "yum"]
+  const words = ["cat", "dog", "sun", "man", "top", "map", "pen", "box", "hat", "car", "bus", "leg", "fun", "run", "bun", "wet", "red", "big", "mix", "six", "yes", "lip", "cup", "tap", "rot", "fun", "sat", "wet", "wag", "hot", "wet", "fog", "jog", "gas", "tag", "act", "bag", "get", "pig", "dig", "fit", "kit", "nit", "sit", "bit", "kit", "zip", "yam", "yap", "yum"]
   const [ dataHolder, setDataHolder] = useState([])
   let indexes = []
   let numWords = 3
@@ -257,7 +257,7 @@ function SequenceMemorization() {
   const [ show, setShow ] = useState(true)
   const [ done, setDone ] = useState(false)
   let numLetters = 4
-  let lettersVault = ["b", "d", "p", "q", "m", "w", "n", "u", "g", "j", "z", "x", "v", "k", "f"]
+  const lettersVault = ["b", "d", "p", "q", "m", "w", "n", "u", "g", "j", "z", "x", "v", "k", "f"]
 
   const [ barProgress, setBarProgress ] = useState(1000)
 
@@ -413,7 +413,7 @@ function SequenceMemorization() {
 function LetterRescramble() {
   const numWords = 4
   const [ dataHolder, setDataHolder] = useState([])
-  let words = ["cat", "dog", "sun", "man", "top", "map", "pen", "box", "hat", "car", "bus", "leg", "fun", "run", "bun", "wet", "red", "big", "mix", "six", "yes", "lip", "cup", "tap", "rot", "fun", "sat", "wet", "wag", "hot", "wet", "fog", "jog", "gas", "tag", "act", "bag", "get", "pig", "dig", "fit", "kit", "nit", "sit", "bit", "kit", "zip", "yam", "yap", "yum"]
+  const words = ["cat", "dog", "sun", "man", "top", "map", "pen", "box", "hat", "car", "bus", "leg", "fun", "run", "bun", "wet", "red", "big", "mix", "six", "yes", "lip", "cup", "tap", "rot", "fun", "sat", "wet", "wag", "hot", "wet", "fog", "jog", "gas", "tag", "act", "bag", "get", "pig", "dig", "fit", "kit", "nit", "sit", "bit", "kit", "zip", "yam", "yap", "yum"]
   const [ wordsChosen, setWordsChosen ] = useState([])
   const [ boxes, setBoxes ] = useState([])
   const [ lettersIn, SetLettersIn ] = useState([])
@@ -658,7 +658,7 @@ let FreeDrawing = () => {
           setLettersChosen()
           setBarProgress(1000)
         } else {
-          setBarProgress(prevProgress => prevProgress - 20)
+          setBarProgress(prevProgress => prevProgress - 5)
         }
       }
     }, 500)

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { BackgroundHomePage, BackgroundClassesPage, BackgroundStudentsPage, BackgroundStatisticsPage, BackgroundGames1, BackgroundGames2, BackgroundGames3 } from './components/background';
 import { WordSearch, SequenceMemorization, LetterRescramble, LineDrawing, FreeDrawing } from './components/games';
+import { LetterRecognition, SyllableRecognition, WordRecognition } from './components/phonetic games';
 import { Classes } from './components/classes';
 import { StudentsPage } from './components/students';
 import { StatisticsPage } from './components/statistics';
@@ -21,9 +22,9 @@ function App() {
         {gameNum === 5 ? <FreeDrawing /> : null}
       </div> : null}
       {pageNum === 3 ? <div><BackgroundGames2 PageChange = {pageNum => setPageNum(pageNum)} GameChange = {gameNum => setGameNum(gameNum)} gameNum={gameNum}/>
-        {gameNum === 1 ? <></> : null}
-        {gameNum === 2 ? <></> : null}
-        {gameNum === 3 ? <></> : null}
+        {gameNum === 1 ? <LetterRecognition /> : null}
+        {gameNum === 2 ? <SyllableRecognition /> : null}
+        {gameNum === 3 ? <WordRecognition /> : null}
       </div>: null}
       {pageNum === 5 ? <div><BackgroundGames3 PageChange = {pageNum => setPageNum(pageNum)} />
       </div> : null}
