@@ -696,7 +696,7 @@ let LineDrawing = () => {
     )
   }
 
-//-----------------------game 5-----------------------
+//-----------------------game 5------------------------
 
 let FreeDrawing = () => {
   const canvasRef = useRef(null)
