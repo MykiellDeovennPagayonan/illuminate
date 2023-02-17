@@ -569,11 +569,15 @@ let LineDrawing = () => {
       3: "4",
       4: "5",
     };
+
+    useEffect(()=>{
     const loadModel = async () => {
       const m = await tf.loadGraphModel(MODEL_URL);
       console.log(m)
       setModel(m);
     };
+    loadModel();
+    },[])
 
     const handleImageUpload = async (event) => {
       const image = event.target.files[0];
@@ -683,7 +687,7 @@ let LineDrawing = () => {
         <div>
           <button className="draw" onClick={setToDraw}> Draw </button>
           <button className="erase" onClick={setToErase}> Erase </button>
-          <button onClick={loadModel}>Load Model</button>
+         
         <input type="file" accept="image/*" onChange={handleImageUpload} />
          
           
