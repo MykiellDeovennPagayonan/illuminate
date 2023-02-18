@@ -10,18 +10,7 @@ import {} from './components/games copy';
 function App() {
   const [ pageNum, setPageNum ] = useState(1)
   const [ gameNum, setGameNum] = useState(1)
-  const tf = require("@tensorflow/tfjs");
 
-  async function predictAlt() { /*import where-ever, preferreably on-load of app.js*/
-    console.log("Loading Model....")
-    const myModel = await tf.loadGraphModel("model.json");
-    console.log(typeof myModel);
-  if (!myModel) { alert("Model didnt work"); return; }
-  
-  }
-
-
-predictAlt()
   return (
     <>
       {pageNum === 1 ? <div><BackgroundHomePage PageChange = {pageNum => setPageNum(pageNum)} GameChange = {gameNum => setGameNum(gameNum)}/></div>: null}
@@ -45,9 +34,7 @@ predictAlt()
       </div> : null}
       {pageNum === 8 ? <div><BackgroundStatisticsPage PageChange = {pageNum => setPageNum(pageNum)} /> <StatisticsPage />
       </div> : null}
-           {/* <button onClick={predictAlt} style={{ fontSize: "20px" }}>
-        my model
-      </button> */}
+     
 
     </>
     
