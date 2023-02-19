@@ -13,10 +13,10 @@ import { classes, classViewing, studentViewing } from "../backend/data";
 
 export default function LetterRescrambleChart() {
   let datas = []
-  for (let i = 0; i < classes[classViewing].studentsList[studentViewing].matchingAndDrawing.LetterRescramble.exercises.length; i++){
+  for (let i = 0; i < classes[classViewing].studentsList[studentViewing].matchingAndDrawing.letterRescramble.exercises.length; i++){
     datas.push({
       attempt: String("Attempt: " + (i+1)),
-      completed: Number(classes[classViewing].studentsList[studentViewing].matchingAndDrawing.LetterRescramble.exercises[i].length)
+      completed: Number(classes[classViewing].studentsList[studentViewing].matchingAndDrawing.letterRescramble.exercises[i].length)
     })
   }
 

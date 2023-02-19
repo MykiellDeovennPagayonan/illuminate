@@ -1,6 +1,9 @@
 import React, { useRef, useEffect, useState } from "react"
 import "./games.css";
 import { classes, classViewing, studentViewing } from "./backend/data";
+import * as tf from "@tensorflow/tfjs"
+import '@tensorflow/tfjs-backend-webgl';
+import '@tensorflow/tfjs-backend-cpu';
 
 //-----------------------game 1-----------------------
 
@@ -426,7 +429,7 @@ function LetterRescramble() {
     const timer = setInterval(() => {
       if (barProgress <= 0) {
         if (dataHolder !== []){
-          classes[classViewing].studentsList[studentViewing].matchingAndDrawing.LetterRescramble.exercises.push(dataHolder)
+          classes[classViewing].studentsList[studentViewing].matchingAndDrawing.letterRescramble.exercises.push(dataHolder)
           setDataHolder([])
         }
         setBarProgress(1000)
@@ -551,86 +554,121 @@ function LetterRescramble() {
 
 //-----------------------game 4-----------------------
 
-let LineDrawing = () => {
-    const [ erase, setErase ] = useState(false)
-    const canvasRef = useRef(null)
-    const contextRef = useRef(null)
-  
-    const [isDrawing, setIsDrawing] = useState(false)
-  
-    useEffect(() => {
-      const canvas = canvasRef.current
-      canvas.width = 400
-      canvas.height = 400
-  
-      const context = canvas.getContext("2d");
-      context.lineCap = "round";
-      context.strokeStyle = "black";
-      context.lineWidth = 5;
-      contextRef.current = context;
-    }, [])
-  
-    const startDrawing = ({nativeEvent}) => {
-      const {offsetX, offsetY} = nativeEvent;
-      contextRef.current.beginPath();
-      if( erase === true){
-        contextRef.current.lineWidth = 20;
-      } else{
-        contextRef.current.lineWidth = 5;
-      }
-      contextRef.current.moveTo(offsetX, offsetY);
-      contextRef.current.lineTo(offsetX, offsetY);
-      contextRef.current.stroke();
-      setIsDrawing(true);
-      nativeEvent.preventDefault();
+const MODEL_URL = 'model.json';
+
+const TARGET_CLASSES = { /*Change with updated Classses */
+  0: "1",
+  1: "2",
+  2: "3",
+  3: "4",
+  4: "5",
+};
+
+const LineDrawing = () => {
+  /* TF MODEL */
+  const MODEL_URL = 'model.json';
+  const [model, setModel] = useState(null);
+  const TARGET_CLASSES = {
+    0: "1",
+    1: "2",
+    2: "3",
+    3: "4",
+    4: "5",
   };
-  
-  const draw = ({nativeEvent}) => {
-      if(!isDrawing) {
-          return;
-      }
-      
-      const {offsetX, offsetY} = nativeEvent;
-      contextRef.current.lineTo(offsetX, offsetY);
-      contextRef.current.stroke();
-      nativeEvent.preventDefault();
+
+  useEffect(() => {
+    const loadModel = async () => {
+      const m = await tf.loadGraphModel(MODEL_URL);
+      console.log(m);
+      setModel(m);
+    };
+    loadModel();
+  }, []);
+
+  const canvasRef = useRef(null);
+  const [drawing, setDrawing] = useState(false);
+
+  const handleDraw = (e) => {
+    if (!drawing) return;
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.lineWidth = 10;
+    ctx.lineCap = "round";
+    ctx.lineTo(e.clientX, e.clientY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(e.clientX, e.clientY);
   };
-  
-  const stopDrawing = () => {
-      contextRef.current.closePath();
-      setIsDrawing(false);
+
+  const handleMouseDown = (e) => {
+    setDrawing(true);
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.beginPath();
+    ctx.moveTo(e.clientX, e.clientY);
+    canvasRef.current.addEventListener("mousemove", handleDraw);
   };
-  
-  const setToDraw = () => {
-    setErase(false)
-    contextRef.current.globalCompositeOperation = 'source-over';
+
+  const handleMouseUp = (e) => {
+    setDrawing(false);
+    canvasRef.current.removeEventListener("mousemove", handleDraw);
   };
-  
-  const setToErase = () => {
-    setErase(true)
-    contextRef.current.globalCompositeOperation = 'destination-out';
+
+  const handleImageUpload = async (imageData) => {
+    const img = new Image();
+    img.src = imageData;
+
+    await new Promise((resolve, reject) => {
+      img.onload = () => {
+        resolve();
+      };
+      img.onerror = (e) => {
+        reject(e);
+      };
+    });
+
+    const tensor = tf.browser.fromPixels(img)
+      .resizeNearestNeighbor([224, 224]) // change the image size
+      .expandDims()
+      .toFloat()
+      .reverse(-1); // RGB -> BGR;
+
+    const predictions = await model.predict(tensor).data();
+    const topPredictions = Array.from(predictions)
+      .map((probability, i) => ({
+        probability,
+        className: TARGET_CLASSES[i],
+      }))
+      .sort((a, b) => b.probability - a.probability)
+      .slice(0, 2)
+      .filter((prediction) => prediction.probability >= 0.5);
+
+    console.log(topPredictions);
   };
-  
-    return (
-      <>
-        <div className="image" style={{width: 400, height: 400, margin: 0, padding: 0}}>
-          
-        </div>
-        <canvas className="canvas" style={{width: 400, height: 400, margin: 0, padding: 0}}
-        ref={canvasRef}
-        onMouseDown={startDrawing}
-        onMouseMove={draw}
-        onMouseUp={stopDrawing}
-        onMouseLeave={stopDrawing}
-        >
-        </canvas>
-        <div>
-          <button className="draw" onClick={setToDraw}> Draw </button>
-          <button className="erase" onClick={setToErase}> Erase </button>
-        </div>
-      </>
-    )
-  }
+
+  const handleSubmit = () => {
+    const canvas = canvasRef.current;
+    const imageData = canvas.toDataURL();
+    handleImageUpload(imageData);
+  };
+
+  return (
+    <>
+      <div>
+        <canvas
+          className="canvas"
+          ref={canvasRef}
+          width={500}
+          height={500}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+        />
+      </div>
+      <div>
+        <button className="draw" onClick={handleSubmit}>Submit</button>
+      </div>
+    </>
+  );
+}
+
 
 //-----------------------game 5-----------------------
 
@@ -650,15 +688,15 @@ let FreeDrawing = () => {
       if (begin === true) {
         if (barProgress <= 0) {
           if (dataHolder !== 0) {
-            classes[classViewing].studentsList[studentViewing].matchingAndDrawing.LetterRescramble.exercises.push(dataHolder)
+            classes[classViewing].studentsList[studentViewing].matchingAndDrawing.letterRescramble.exercises.push(dataHolder)
             setDataHolder([])
           }
           setBegin(false)
           setScore(0)
-          setLettersChosen()
           setBarProgress(1000)
+          
         } else {
-          setBarProgress(prevProgress => prevProgress - 5)
+          setBarProgress(prevProgress => prevProgress - 100)
         }
       }
     }, 500)
@@ -877,7 +915,6 @@ let FreeDrawing = () => {
       }
       animate()
     }
-
     runCanvas()
   }
 

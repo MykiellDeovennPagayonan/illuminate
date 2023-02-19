@@ -57,10 +57,10 @@ const data = [
 
 export default function RedrawChart() {
   let datas = []
-  for (let i = 0; i < classes[classViewing].studentsList[studentViewing].matchingAndDrawing.LetterRescramble.exercises.length; i++){
+  for (let i = 0; i < classes[classViewing].studentsList[studentViewing].matchingAndDrawing.letterRescramble.exercises.length; i++){
     datas.push({
       attempt: i,
-      completed: Number(classes[classViewing].studentsList[studentViewing].matchingAndDrawing.LetterRescramble.exercises[i].length)
+      completed: Number(classes[classViewing].studentsList[studentViewing].matchingAndDrawing.letterRescramble.exercises[i].length)
     })
   }
 

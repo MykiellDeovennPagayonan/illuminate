@@ -69,44 +69,36 @@ function addStudent(){
     matchingAndDrawing: {
   
       wordSearch: {
-        exercises: [],
-        time: []
+        exercises: []
       },
   
       sequenceMemorization: {
-        exercises: [],
-        time: []
+        exercises: []
       },
   
-      LetterRescramble: {
-        exercises: [],
-        time: []
+      letterRescramble: {
+        exercises: []
       },
   
       redraw: {
-        exercises: [],
-        time: []
+        exercises: []
       },
   
       drawingcanvas: {
-        drawings: [],
-        time: []     
+        exercises: []
       }
     }, 
   
-    shawdows: {
-      shadowBuilding: {
-        exercises: [],
+    phoneticRecognition: {
+      letterRegcognition: {
         accuracy: []
       },
   
-      handShadowPlay: {
-        exercises: [],
+      syllableRecognition: {
         accuracy: []
       },
   
-      shadowinTheWall: {
-        exercises: [],
+      wordRecognition: {
         accuracy: []
       }
     }

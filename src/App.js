@@ -13,6 +13,7 @@ function App() {
 
   return (
     <>
+      <BackgroundGames1 />
       {pageNum === 1 ? <div><BackgroundHomePage PageChange = {pageNum => setPageNum(pageNum)} GameChange = {gameNum => setGameNum(gameNum)}/></div>: null}
       {pageNum === 2 ? <div><BackgroundGames1 PageChange = {pageNum => setPageNum(pageNum)} GameChange = {gameNum => setGameNum(gameNum)} gameNum={gameNum}/>
         {gameNum === 1 ? <WordSearch /> : null}

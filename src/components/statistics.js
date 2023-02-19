@@ -30,7 +30,7 @@ function StatisticsPage() {
               <SequenceMemorizationChart />
             </button>
             <button className="statistics-games-1-stats">
-              <h2 style={{color: "black", textAlign: "left", margin: 5}}> Letter Rescramble {classes[classViewing].studentsList[studentViewing].matchingAndDrawing.LetterRescramble.exercises.length} </h2>
+              <h2 style={{color: "black", textAlign: "left", margin: 5}}> Letter Rescramble {classes[classViewing].studentsList[studentViewing].matchingAndDrawing.letterRescramble.exercises.length} </h2>
               <LetterRescrambleChart />
             </button>
             <button className="statistics-games-1-stats">

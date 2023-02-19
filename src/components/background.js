@@ -4,11 +4,7 @@ import { useState } from 'react';
 import { classes, classViewing, studentViewing, prevStudent, nextStudent } from './backend/data'
 
 function BackgroundHomePage(props) {
-  function test(){
-      var msg = new SpeechSynthesisUtterance();
-      msg.text = "Good Morning";
-      window.speechSynthesis.speak(msg);
-  }
+
   
   return (
     <div className='background-outer'>
