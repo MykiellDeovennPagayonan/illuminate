@@ -1,9 +1,14 @@
 import React, { useRef, useEffect, useState } from "react"
 import "./games.css";
 import { classes, classViewing, studentViewing } from "./backend/data";
+<<<<<<< HEAD
 import * as tf from "@tensorflow/tfjs"
 import '@tensorflow/tfjs-backend-webgl';
 import '@tensorflow/tfjs-backend-cpu';
+=======
+import * as tf from '@tensorflow/tfjs';
+import { Label } from "recharts";
+>>>>>>> fa7bef075461009de72f0ce5b8fcd783bebbf890
 
 //-----------------------game 1-----------------------
 
@@ -554,6 +559,7 @@ function LetterRescramble() {
 
 //-----------------------game 4-----------------------
 
+<<<<<<< HEAD
 const MODEL_URL = 'model.json';
 
 const TARGET_CLASSES = { /*Change with updated Classses */
@@ -574,6 +580,98 @@ const LineDrawing = () => {
     2: "3",
     3: "4",
     4: "5",
+=======
+let LineDrawing = () => {
+    const [ erase, setErase ] = useState(false)
+    const canvasRef = useRef(null)
+    const contextRef = useRef(null)
+    const [isDrawing, setIsDrawing] = useState(false)
+
+    /* TF MODEL */
+    const MODEL_URL = 'model.json';
+    const [model, setModel] = useState(null);
+    const TARGET_CLASSES = { /*Change with updated Classses */
+      0: "1",
+      1: "2",
+      2: "3",
+      3: "4",
+      4: "5",
+    };
+
+    useEffect(()=>{
+    const loadModel = async () => {
+      const m = await tf.loadGraphModel(MODEL_URL);
+      console.log(m)
+      setModel(m);
+    };
+    loadModel();
+    },[])
+
+    const handleImageUpload = async (event) => {
+      const image = event.target.files[0];
+    
+      // Create an HTMLImageElement from the uploaded file
+      const imgElement = document.createElement('img');
+      imgElement.src = URL.createObjectURL(image);
+    
+      // Wait for the image to load
+      await new Promise((resolve) => {
+        imgElement.onload = () => {
+          resolve();
+        };
+      });
+    
+      // Convert the image to a tensor and classify it
+      const tensor = tf.browser.fromPixels(imgElement)
+      .resizeNearestNeighbor([224, 224]) // change the image size
+      .expandDims()
+      .toFloat()
+      .reverse(-1); // RGB -> BGR;
+      const predictions = await model.predict(tensor).data();
+      console.log(predictions);  
+  
+      const topPredictions = Array.from(predictions)
+          .map((probability, i) => ({
+            probability,
+            className: TARGET_CLASSES[i],
+          }))
+          .sort((a, b) => b.probability - a.probability)
+          .slice(0, 2)
+          .filter((prediction) => prediction.probability >= 0.5);
+  
+     console.log(topPredictions)
+  
+        
+    };
+
+/* ----------End of Model---------*/
+
+    useEffect(() => {
+      const canvas = canvasRef.current
+      canvas.width = 400
+      canvas.height = 400
+  
+      const context = canvas.getContext("2d");
+      context.lineCap = "round";
+      context.strokeStyle = "black";
+      context.lineWidth = 5;
+      contextRef.current = context;
+    }, [])
+  
+    const startDrawing = ({nativeEvent}) => {
+      const {offsetX, offsetY} = nativeEvent;
+      contextRef.current.beginPath();
+      if( erase === true){
+        contextRef.current.lineWidth = 20;
+      } else{
+        contextRef.current.lineWidth = 5;
+      }
+      contextRef.current.moveTo(offsetX, offsetY);
+      contextRef.current.lineTo(offsetX, offsetY);
+      contextRef.current.stroke();
+      setIsDrawing(true);
+      nativeEvent.preventDefault();
+>>>>>>> fa7bef075461009de72f0ce5b8fcd783bebbf890
   };
 
   useEffect(() => {
@@ -643,6 +741,7 @@ const LineDrawing = () => {
 
     console.log(topPredictions);
   };
+<<<<<<< HEAD
 
   const handleSubmit = () => {
     const canvas = canvasRef.current;
@@ -669,6 +768,33 @@ const LineDrawing = () => {
   );
 }
 
+=======
+ /*Justin Added Model Classifier*/
+    return (
+      <>
+        <div className="image" style={{width: 400, height: 400, margin: 0, padding: 0}}>
+          
+        </div>
+        <canvas className="canvas" style={{width: 400, height: 400, margin: 0, padding: 0}}
+        ref={canvasRef}
+        onMouseDown={startDrawing}
+        onMouseMove={draw}
+        onMouseUp={stopDrawing}
+        onMouseLeave={stopDrawing}
+        >
+        </canvas>
+        <div>
+          <button className="draw" onClick={setToDraw}> Draw </button>
+          <button className="erase" onClick={setToErase}> Erase </button>
+         
+        <input type="file" accept="image/*" onChange={handleImageUpload} />
+         
+          
+        </div>
+      </>
+    )
+  }
+>>>>>>> fa7bef075461009de72f0ce5b8fcd783bebbf890
 
 //-----------------------game 5-----------------------
 

@@ -35,7 +35,10 @@ function App() {
       </div> : null}
       {pageNum === 8 ? <div><BackgroundStatisticsPage PageChange = {pageNum => setPageNum(pageNum)} /> <StatisticsPage />
       </div> : null}
+     
+
     </>
+    
   );
 }
 
