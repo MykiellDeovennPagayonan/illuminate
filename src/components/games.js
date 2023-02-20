@@ -3,10 +3,36 @@ import "./games.css";
 import { classes, classViewing, studentViewing } from "./backend/data";
 import * as tf from '@tensorflow/tfjs';
 import { Label } from "recharts";
+import html2canvas from "html2canvas";
+// import BackgroundImage from './resources/lineDrawing/1.png'
 
+import image0 from './resources/lineDrawing/0.png';
+import image1 from './resources/lineDrawing/1.png';
+import image2 from './resources/lineDrawing/2.png';
+import image3 from './resources/lineDrawing/3.png';
+import image4 from './resources/lineDrawing/4.png';
+import image5 from './resources/lineDrawing/5.png';
+import image6 from './resources/lineDrawing/6.png';
+import image7 from './resources/lineDrawing/7.png';
+import image8 from './resources/lineDrawing/8.png';
+import image9 from './resources/lineDrawing/9.png';
+import image10 from './resources/lineDrawing/10.png';
+import image11 from './resources/lineDrawing/11.png';
+import image12 from './resources/lineDrawing/12.png';
+import image13 from './resources/lineDrawing/13.png';
+import image14 from './resources/lineDrawing/14.png';
+import image15 from './resources/lineDrawing/15.png';
+import image16 from './resources/lineDrawing/16.png';
+import image17 from './resources/lineDrawing/17.png';
+import image18 from './resources/lineDrawing/18.png';
+import image19 from './resources/lineDrawing/19.png';
+import image20 from './resources/lineDrawing/20.png';
+import image21 from './resources/lineDrawing/21.png';
+import image22 from './resources/lineDrawing/22.png';
+import image23 from './resources/lineDrawing/23.png';
+import image24 from './resources/lineDrawing/24.png';
 //-----------------------game 1-----------------------
-
-function WordSearch() { 
+function WordSearch(){ 
   const words = ["cat", "dog", "sun", "man", "top", "map", "pen", "box", "hat", "car", "bus", "leg", "fun", "run", "bun", "wet", "red", "big", "mix", "six", "yes", "lip", "cup", "tap", "rot", "fun", "sat", "wet", "wag", "hot", "wet", "fog", "jog", "gas", "tag", "act", "bag", "get", "pig", "dig", "fit", "kit", "nit", "sit", "bit", "kit", "zip", "yam", "yap", "yum"]
   const [ dataHolder, setDataHolder] = useState([])
   let indexes = []
@@ -14,7 +40,7 @@ function WordSearch() {
   const rows = 10
   const columns = 8
   let repeat;
-
+  
   const [ wordsChosen, SetWordsChosen] = useState([])
   const [ boxes, SetBoxes] = useState([])
   const [ done, setDone ] = useState(false)
@@ -251,7 +277,6 @@ function WordSearch() {
 }
 
 //-----------------------game 2-----------------------
-
 function SequenceMemorization() {
   const [ dataHolder, setDataHolder] = useState([])
   const [ boxes, setBoxes ] = useState([])
@@ -558,18 +583,77 @@ let LineDrawing = () => {
     const canvasRef = useRef(null)
     const contextRef = useRef(null)
     const [isDrawing, setIsDrawing] = useState(false)
+   const images = [image0, image1, image2,image3,image4,image5,image6,image7,image8,image9,image10,image11,image12, image13, image14,image15,
+    image16,image17,image18,image19,image20,image21,image22,image23,image24];
 
+    // const downloadScreenshot = async () => {
+    //   const canvas = await html2canvas(document.getElementById("screenshotThis"));
+    //   const dataUrl = canvas.toDataURL('image/png');
+    //   const link = document.createElement('a');
+    //   link.download = 'screenshot.png';
+    //   link.href = dataUrl;
+    //   document.body.appendChild(link);
+    //   link.click();
+    //   document.body.removeChild(link);
+    // };
+    
     /* TF MODEL */
+    let randomIndex = Math.floor(Math.random() * images.length)
     const MODEL_URL = 'model.json';
     const [model, setModel] = useState(null);
     const TARGET_CLASSES = { /*Change with updated Classses */
-      0: "1",
-      1: "2",
-      2: "3",
-      3: "4",
-      4: "5",
+    // 0: "0",
+    // 1: "1",
+    // 2: "2",
+    // 3: "3",
+    // 4: "4",
+    // 5: "5",
+    // 6: "6",
+    // 7: "7",
+    // 8: "8",
+    // 9: "9",
+    // 10: "10",
+    // 11: "11",
+    // 12: "12",
+    // 13: "13",
+    // 14: "14",
+    // 15: "15",
+    // 16: "16",
+    // 17: "17",
+    // 18: "18",
+    // 19: "19",
+    // 20: "20",
+    // 21: "21",
+    // 22: "22",
+    // 23: "23",
+    // 24: "24",
+    0: "0",
+    1: "1",
+    2: "10",
+    3: "11",
+    4: "12",
+    5: "13",
+    6: "14",
+    7: "15",
+    8: "16",
+    9: "17",
+    10: "18",
+    11: "19",
+    12: "2",
+    13: "20",
+    14: "21",
+    15: "22",
+    16: "23",
+    17: "24",
+    18: "3",
+    19: "4",
+    20: "5",
+    21: "6",
+    22: "7",
+    23: "8",
+    24: "9",
     };
-
+    const [selectedImage, setSelectedImage] = useState(images[randomIndex]);
     useEffect(()=>{
     const loadModel = async () => {
       const m = await tf.loadGraphModel(MODEL_URL);
@@ -579,43 +663,57 @@ let LineDrawing = () => {
     loadModel();
     },[])
 
-    const handleImageUpload = async (event) => {
-      const image = event.target.files[0];
+    const downloadScreenshot = async () => {
+      const canvas = await html2canvas(document.getElementById("screenshotThis"));
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = 'screenshot.png';
+      link.href = dataUrl;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
     
-      // Create an HTMLImageElement from the uploaded file
-      const imgElement = document.createElement('img');
-      imgElement.src = URL.createObjectURL(image);
-    
-      // Wait for the image to load
-      await new Promise((resolve) => {
-        imgElement.onload = () => {
-          resolve();
-        };
-      });
-    
-      // Convert the image to a tensor and classify it
-      const tensor = tf.browser.fromPixels(imgElement)
-      .resizeNearestNeighbor([224, 224]) // change the image size
-      .expandDims()
-      .toFloat()
-      .reverse(-1); // RGB -> BGR;
-      const predictions = await model.predict(tensor).data();
-      console.log(predictions);  
-  
-      const topPredictions = Array.from(predictions)
+    const handleImageUpload = async () => {
+      console.log("hi");
+      const canvas = await html2canvas(document.getElementById("screenshotThis"));
+      const tensor = tf.browser.fromPixels(canvas)
+        .resizeNearestNeighbor([300, 300]) // change the image size
+        .expandDims()
+        .toFloat()
+        .reverse(-1); // RGB -> BGR;     
+        const predictions = await model.predict(tensor).data();
+        // console.log(predictions);
+        const topPredictions = Array.from(predictions)
           .map((probability, i) => ({
             probability,
             className: TARGET_CLASSES[i],
           }))
           .sort((a, b) => b.probability - a.probability)
-          .slice(0, 2)
-          .filter((prediction) => prediction.probability >= 0.5);
-  
-     console.log(topPredictions)
-  
+          .slice(0)
+          .filter((prediction) => prediction.probability >= 0.2);
+          console.log(topPredictions)
+          console.log(topPredictions[0].className)
+          // console.log(selectedImage.split("/").pop())
+          const wholeNumber= parseInt(selectedImage.split("/").pop())
+            // console.log(wholeNumber)
+            const num2String = wholeNumber.toString();
+            console.log(num2String)       
+            if (num2String === topPredictions[0].className) {
+              console.log("Whoo hoo")
+            }
+            else{
+              console.log("Ohnooo")
+            }
+          if (predictions && topPredictions.length > 0) {
+            let randomIndex = Math.floor(Math.random() * images.length)
+            setSelectedImage(images[randomIndex]);
+
+            const context = contextRef.current;
+            context.clearRect(0, 0, canvas.width, canvas.height);
+          }
         
     };
-
 /* ----------End of Model---------*/
 
     useEffect(() => {
@@ -660,7 +758,7 @@ let LineDrawing = () => {
       contextRef.current.closePath();
       setIsDrawing(false);
   };
-  
+  //i have no idea what these are
   const setToDraw = () => {
     setErase(false)
     contextRef.current.globalCompositeOperation = 'source-over';
@@ -670,13 +768,30 @@ let LineDrawing = () => {
     setErase(true)
     contextRef.current.globalCompositeOperation = 'destination-out';
   };
+
+  let randomNum = Math.floor(Math.random()*25)
+
+
  /*Justin Added Model Classifier*/
     return (
       <>
-        <div className="image" style={{width: 400, height: 400, margin: 0, padding: 0}}>
+        <div className="image101" id="imagesPLS"style={{  width: 400,
+    height: 400,
+    margin: 0,
+    padding: 0,
+    backgroundImage: `url(${selectedImage})`,
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    position: "absolute",
+    top: 400,
+    left: 560,
+    border: "4px solid black",
+    }}>
           
         </div>
-        <canvas className="canvas" style={{width: 400, height: 400, margin: 0, padding: 0}}
+        <canvas id="screenshotThis"
+        className="canvas" 
+        style={{width: 400, height: 400, margin: 0, padding: 0}}
         ref={canvasRef}
         onMouseDown={startDrawing}
         onMouseMove={draw}
@@ -685,12 +800,11 @@ let LineDrawing = () => {
         >
         </canvas>
         <div>
-          <button className="draw" onClick={setToDraw}> Draw </button>
-          <button className="erase" onClick={setToErase}> Erase </button>
-         
-        <input type="file" accept="image/*" onChange={handleImageUpload} />
-         
-          
+          <button className="draw" onClick={handleImageUpload}> Draw </button>
+          {/* <button className="erase" onClick={setToErase}> Erase </button>       */}
+
+              <div id="screenshot"> {/* The content to screenshot goes here */} </div>
+            <button className = "erase"onClick={downloadScreenshot}>Download</button>   
         </div>
       </>
     )
@@ -699,271 +813,344 @@ let LineDrawing = () => {
 //-----------------------game 5------------------------
 
 let FreeDrawing = () => {
-  const canvasRef = useRef(null)
-  const contextRef = useRef(null)
-  const [ dataHolder, setDataHolder] = useState(0)
-  const [ lettersChosen, setLettersChosen ] = useState([])
-  const numLetters = 4
-  const [ score, setScore ] = useState(0)
-  const [ begin, setBegin ] = useState(false)  
+//   const canvasRef = useRef(null)
+//   const contextRef = useRef(null)
+//   const [ dataHolder, setDataHolder] = useState(0)
+//   const [ lettersChosen, setLettersChosen ] = useState([])
+//   const numLetters = 4
+//   const [ score, setScore ] = useState(0)
+//   const [ begin, setBegin ] = useState(false)  
 
-  const [ barProgress, setBarProgress ] = useState(1000)
+//   const [ barProgress, setBarProgress ] = useState(1000)
+
+//   useEffect(() => {
+//     const timer = setInterval(() => {
+//       if (begin === true) {
+//         if (barProgress <= 0) {
+//           if (dataHolder !== 0) {
+//             classes[classViewing].studentsList[studentViewing].matchingAndDrawing.LetterRescramble.exercises.push(dataHolder)
+//             setDataHolder([])
+//           }
+//           setBegin(false)
+//           setScore(0)
+//           setLettersChosen()
+//           setBarProgress(1000)
+//         } else {
+//           setBarProgress(prevProgress => prevProgress - 5)
+//         }
+//       }
+//     }, 500)
+//     return () => clearInterval(timer)
+//   })
+
+//   function newSet() {
+//     setBegin(true)
+//     setScore(0)
+//     lettersSet()
+//   }
+
+//   function lettersSet(){
+//     let lettersChosenInitial = []
+
+//     for (let i = 0; i < numLetters; i++) {
+//       let match = false
+//       let letter;
+
+//       do {
+//         match = false
+//         letter = String.fromCharCode(Math.floor(Math.random()*26) + 97)
+        
+//         for (let i = 0; i < lettersChosenInitial.length; i++) {
+//           if (letter === lettersChosenInitial[i]){
+//             match = true
+//           }
+//         }
+
+//       } while (match === true)
+
+//       lettersChosenInitial.push(letter)
+//     }
+
+//     setLettersChosen(lettersChosenInitial)
+
+//     function runCanvas() {
+//       const canvas = canvasRef.current
+//       canvas.width = 1050
+//       canvas.height = 700
+  
+//       const context = canvas.getContext("2d");
+//       context.strokeStyle = "black";
+//       context.lineWidth = 5;
+//       contextRef.current = context;
+  
+//       let colors = ["#FF69B4", "#FFA07A", "#FFFF00", "#32CD32", "#00BFFF"];
+//       let numberCircles = 30
+//       let lettersIn = 0
+//       let floatingLetters = []
+  
+//       class cirlces {
+//         x;
+//         y;
+//         colorChoice;
+//         dx;
+//         radius;
+//         letter;
+  
+//         respawn(x, y){
+//           this.x = x
+//           this.y = y
+//           this.colorChoice = colors[Math.floor(Math.random()*colors.length)]
+//           this.letter = String.fromCharCode(Math.floor(Math.random()*26) + 97)
+//         }
+  
+//         constructor(x, y, colorChoice, letter) {
+//           this.x = x
+//           this.y = y
+//           this.colorChoice = colorChoice
+//           this.dx = .5
+//           this.letter = letter
+//           this.radius = 30
+//         }
+//       }
+  
+//       for (let i = 0; i < numberCircles; i++){
+//         let repeat;
+//         let xIni;
+//         let yIni;
+
+//         do {
+//           repeat = false
+
+//           xIni = Math.floor(Math.random()*canvas.width)
+//           yIni = Math.floor(Math.random()*canvas.height)
+
+//           for (let k = 0; k < floatingLetters.length; k++){
+//             if ((floatingLetters[k].x - xIni < 30 && xIni - floatingLetters[k].x < 30) && (floatingLetters[k].y - yIni < 30 && yIni - floatingLetters[k].y < 30)) {
+//               repeat = true
+//             }
+//           }
+//         } while (repeat)
+
+//         let colorChoiceIni = colors[Math.floor(Math.random()*colors.length)]
+//         let letterIni = String.fromCharCode(Math.floor(Math.random()*26) + 97)
+
+//         if (lettersIn < 4) {
+//           letterIni = lettersChosenInitial[Math.floor(Math.random()*lettersChosenInitial.length)]
+//         }
+
+//         for (let j = 0; j < lettersChosenInitial.length; j++) {
+//           if (letterIni === lettersChosenInitial[j]) {
+//             lettersIn++
+//           }
+//         }
+
+//         let circleInitial = new cirlces(xIni, yIni, colorChoiceIni, letterIni)
+//         floatingLetters.push(circleInitial)
+//       }
+  
+//       let mouse = {
+//         x: undefined,
+//         y: undefined
+//       }
+      
+//       let draw = false
+//       window.addEventListener("mousemove", function(event){
+//         window.addEventListener("mousedown", function() {
+//           draw = true
+//           if (event.x >= 565 && event.x <= 565 + canvas.width && event.y >= 310 && event.y <= 310 + canvas.height) {
+//             mouse.x = event.x - 565
+//             mouse.y = event.y - 310
+//             }
+//         })
+//         window.addEventListener("mouseup", function() {
+//           draw = false
+//         })
+//         if (draw === true){
+//           if (event.x >= 565 && event.x <= 565 + canvas.width && event.y >= 310 && event.y <= 310 + canvas.height) {
+//             mouse.x = event.x - 565
+//             mouse.y = event.y - 310
+//           }
+//         } else {
+//           mouse.x = undefined
+//           mouse.y = undefined
+//         }
+//       })
+  
+//       function animate(){
+//         requestAnimationFrame(animate)
+//         context.clearRect(0, 0, canvas.width, canvas.height)
+  
+//         for(let i = 0; i < numberCircles; i++){
+//           context.beginPath()
+//           context.arc(floatingLetters[i].x, floatingLetters[i].y, floatingLetters[i].radius, 0, Math.PI*2, true)
+//           context.stroke()
+//           context.fillStyle = floatingLetters[i].colorChoice
+//           context.fill()
+//           context.fillStyle = "black"
+//           context.font = "bold 32px sans-serif"
+  
+//           context.fillText(floatingLetters[i].letter, floatingLetters[i].x - 8, floatingLetters[i].y + 7)
+//           if (floatingLetters[i].x > canvas.width) {
+//             for (let j = 0; j < lettersChosenInitial.length; j++) {
+//               if (floatingLetters[i].letter === lettersChosenInitial[j]) {
+//                 lettersIn--
+//               }
+//             }
+//             let repeat;
+//             let x;
+//             let y;
+
+//             do {
+//               repeat = false
+
+//               x = Math.floor(Math.random()* - 200)
+//               y = Math.floor(Math.random()*canvas.height)
+  
+//               for (let k = 0; k < numberCircles; k++){
+//                 if ((floatingLetters[k].x - x < 70 && x - floatingLetters[k].x < 70) && (floatingLetters[k].y - y < 70 && y - floatingLetters[k].y < 70)) {
+//                   repeat = true
+//                 }
+//               }
+//             } while (repeat)
+
+//             floatingLetters[i].respawn(x, y)
+//           }
+  
+//           if ((floatingLetters[i].x - mouse.x < 30 && mouse.x - floatingLetters[i].x < 30) && (floatingLetters[i].y - mouse.y < 30 && mouse.y - floatingLetters[i].y < 30)) {
+//             let notChosen = true
+//             for (let j = 0; j < lettersChosenInitial.length; j++) {
+//               if (floatingLetters[i].letter === lettersChosenInitial[j]) {
+//                 notChosen = false
+//                 setScore(prevScore => prevScore + 1)
+//                 lettersIn--
+//               }
+//             }
+
+//             if (notChosen === true) {
+//               setScore(prevScore => prevScore - 1)
+//             }
+
+//             let repeat;
+//             let x;
+//             let y;
+
+//             do {
+//               repeat = false
+
+//               x = Math.floor(Math.random()* - 200)
+//               y = Math.floor(Math.random()*canvas.height)
+  
+//               for (let k = 0; k < numberCircles; k++){
+//                 if ((floatingLetters[k].x - x < 70 && x - floatingLetters[k].x < 70) && (floatingLetters[k].y - y < 70 && y - floatingLetters[k].y < 70)) {
+//                   repeat = true
+//                 }
+//               }
+//             } while (repeat)
+
+//             floatingLetters[i].respawn(x, y)
+//           }
+  
+//           floatingLetters[i].x += floatingLetters[i].dx
+//         }
+//       }
+//       animate()
+//     }
+
+//     runCanvas()
+//   }
+
+const MODEL_URL = 'model.json';
+
+const TARGET_CLASSES = { /*Change with updated Classses */
+  1: "1",
+  2: "2",
+  3: "3",
+  4: "4",
+  5: "5",
+};
+
+  const canvasRef = useRef(null);
+  const [model, setModel] = useState(null);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      if (begin === true) {
-        if (barProgress <= 0) {
-          if (dataHolder !== 0) {
-            classes[classViewing].studentsList[studentViewing].matchingAndDrawing.LetterRescramble.exercises.push(dataHolder)
-            setDataHolder([])
-          }
-          setBegin(false)
-          setScore(0)
-          setLettersChosen()
-          setBarProgress(1000)
-        } else {
-          setBarProgress(prevProgress => prevProgress - 5)
-        }
-      }
-    }, 500)
-    return () => clearInterval(timer)
-  })
+    const loadModel = async () => {
+      const m = await tf.loadGraphModel(MODEL_URL);
+      console.log(m);
+      setModel(m);
+    };
+    loadModel();
+  }, []);
 
-  function newSet() {
-    setBegin(true)
-    setScore(0)
-    lettersSet()
-  }
+  const handleDraw = (e) => {
+    const ctx = canvasRef.current.getContext('2d');
+    ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+    ctx.stroke();
+  };
 
-  function lettersSet(){
-    let lettersChosenInitial = []
+  const handleSubmit = async () => {
+    console.log("hi")
+    const canvas = canvasRef.current;
+    const tensor = tf.browser.fromPixels(canvas)
+      .resizeNearestNeighbor([224, 224]) // change the image size
+      .expandDims()
+      .toFloat()
+      .reverse(-1); // RGB -> BGR;
+    const predictions = await model.predict(tensor).data();
+    console.log(predictions);
 
-    for (let i = 0; i < numLetters; i++) {
-      let match = false
-      let letter;
+    const topPredictions = Array.from(predictions)
+      .map((probability, i) => ({
+        probability,
+        className: TARGET_CLASSES[i],
+      }))
+      .sort((a, b) => b.probability - a.probability)
+      .slice(0, 2)
+      .filter((prediction) => prediction.probability >= 0.8);
 
-      do {
-        match = false
-        letter = String.fromCharCode(Math.floor(Math.random()*26) + 97)
-        
-        for (let i = 0; i < lettersChosenInitial.length; i++) {
-          if (letter === lettersChosenInitial[i]){
-            match = true
-          }
-        }
-
-      } while (match === true)
-
-      lettersChosenInitial.push(letter)
-    }
-
-    setLettersChosen(lettersChosenInitial)
-
-    function runCanvas() {
-      const canvas = canvasRef.current
-      canvas.width = 1050
-      canvas.height = 700
+    console.log(topPredictions);
+  };
   
-      const context = canvas.getContext("2d");
-      context.strokeStyle = "black";
-      context.lineWidth = 5;
-      contextRef.current = context;
-  
-      let colors = ["#FF69B4", "#FFA07A", "#FFFF00", "#32CD32", "#00BFFF"];
-      let numberCircles = 30
-      let lettersIn = 0
-      let floatingLetters = []
-  
-      class cirlces {
-        x;
-        y;
-        colorChoice;
-        dx;
-        radius;
-        letter;
-  
-        respawn(x, y){
-          this.x = x
-          this.y = y
-          this.colorChoice = colors[Math.floor(Math.random()*colors.length)]
-          this.letter = String.fromCharCode(Math.floor(Math.random()*26) + 97)
-        }
-  
-        constructor(x, y, colorChoice, letter) {
-          this.x = x
-          this.y = y
-          this.colorChoice = colorChoice
-          this.dx = .5
-          this.letter = letter
-          this.radius = 30
-        }
-      }
-  
-      for (let i = 0; i < numberCircles; i++){
-        let repeat;
-        let xIni;
-        let yIni;
-
-        do {
-          repeat = false
-
-          xIni = Math.floor(Math.random()*canvas.width)
-          yIni = Math.floor(Math.random()*canvas.height)
-
-          for (let k = 0; k < floatingLetters.length; k++){
-            if ((floatingLetters[k].x - xIni < 30 && xIni - floatingLetters[k].x < 30) && (floatingLetters[k].y - yIni < 30 && yIni - floatingLetters[k].y < 30)) {
-              repeat = true
-            }
-          }
-        } while (repeat)
-
-        let colorChoiceIni = colors[Math.floor(Math.random()*colors.length)]
-        let letterIni = String.fromCharCode(Math.floor(Math.random()*26) + 97)
-
-        if (lettersIn < 4) {
-          letterIni = lettersChosenInitial[Math.floor(Math.random()*lettersChosenInitial.length)]
-        }
-
-        for (let j = 0; j < lettersChosenInitial.length; j++) {
-          if (letterIni === lettersChosenInitial[j]) {
-            lettersIn++
-          }
-        }
-
-        let circleInitial = new cirlces(xIni, yIni, colorChoiceIni, letterIni)
-        floatingLetters.push(circleInitial)
-      }
-  
-      let mouse = {
-        x: undefined,
-        y: undefined
-      }
-      
-      let draw = false
-      window.addEventListener("mousemove", function(event){
-        window.addEventListener("mousedown", function() {
-          draw = true
-          if (event.x >= 565 && event.x <= 565 + canvas.width && event.y >= 310 && event.y <= 310 + canvas.height) {
-            mouse.x = event.x - 565
-            mouse.y = event.y - 310
-            }
-        })
-        window.addEventListener("mouseup", function() {
-          draw = false
-        })
-        if (draw === true){
-          if (event.x >= 565 && event.x <= 565 + canvas.width && event.y >= 310 && event.y <= 310 + canvas.height) {
-            mouse.x = event.x - 565
-            mouse.y = event.y - 310
-          }
-        } else {
-          mouse.x = undefined
-          mouse.y = undefined
-        }
-      })
-  
-      function animate(){
-        requestAnimationFrame(animate)
-        context.clearRect(0, 0, canvas.width, canvas.height)
-  
-        for(let i = 0; i < numberCircles; i++){
-          context.beginPath()
-          context.arc(floatingLetters[i].x, floatingLetters[i].y, floatingLetters[i].radius, 0, Math.PI*2, true)
-          context.stroke()
-          context.fillStyle = floatingLetters[i].colorChoice
-          context.fill()
-          context.fillStyle = "black"
-          context.font = "bold 32px sans-serif"
-  
-          context.fillText(floatingLetters[i].letter, floatingLetters[i].x - 8, floatingLetters[i].y + 7)
-          if (floatingLetters[i].x > canvas.width) {
-            for (let j = 0; j < lettersChosenInitial.length; j++) {
-              if (floatingLetters[i].letter === lettersChosenInitial[j]) {
-                lettersIn--
-              }
-            }
-            let repeat;
-            let x;
-            let y;
-
-            do {
-              repeat = false
-
-              x = Math.floor(Math.random()* - 200)
-              y = Math.floor(Math.random()*canvas.height)
-  
-              for (let k = 0; k < numberCircles; k++){
-                if ((floatingLetters[k].x - x < 70 && x - floatingLetters[k].x < 70) && (floatingLetters[k].y - y < 70 && y - floatingLetters[k].y < 70)) {
-                  repeat = true
-                }
-              }
-            } while (repeat)
-
-            floatingLetters[i].respawn(x, y)
-          }
-  
-          if ((floatingLetters[i].x - mouse.x < 30 && mouse.x - floatingLetters[i].x < 30) && (floatingLetters[i].y - mouse.y < 30 && mouse.y - floatingLetters[i].y < 30)) {
-            let notChosen = true
-            for (let j = 0; j < lettersChosenInitial.length; j++) {
-              if (floatingLetters[i].letter === lettersChosenInitial[j]) {
-                notChosen = false
-                setScore(prevScore => prevScore + 1)
-                lettersIn--
-              }
-            }
-
-            if (notChosen === true) {
-              setScore(prevScore => prevScore - 1)
-            }
-
-            let repeat;
-            let x;
-            let y;
-
-            do {
-              repeat = false
-
-              x = Math.floor(Math.random()* - 200)
-              y = Math.floor(Math.random()*canvas.height)
-  
-              for (let k = 0; k < numberCircles; k++){
-                if ((floatingLetters[k].x - x < 70 && x - floatingLetters[k].x < 70) && (floatingLetters[k].y - y < 70 && y - floatingLetters[k].y < 70)) {
-                  repeat = true
-                }
-              }
-            } while (repeat)
-
-            floatingLetters[i].respawn(x, y)
-          }
-  
-          floatingLetters[i].x += floatingLetters[i].dx
-        }
-      }
-      animate()
-    }
-
-    runCanvas()
-  }
-
   return (
+    // <>
+    //   <div className="letters-and-score">
+    //     <button className="score"> {score} </button>
+    //     {lettersChosen.map((letter) => {
+    //       return (<button className="letters"> {letter} </button>)
+    //     })}
+    //     <button className="score" style={{backgroundColor: "white", fontSize: 20}} onClick={() => {newSet()}}> New Set </button>
+    //   </div>
+    //   <canvas className="canvas-free-draw" style={{width: 1050, height: 700, margin: 0, padding: 0}}
+    //   ref={canvasRef}
+    //   >
+    //   </canvas>
+    //   <button className="timer">
+    //     <div className="timer-bar" style={{width: (barProgress/1000 * 1113)}}> </div>
+    //   </button>
+    // </>
     <>
-      <div className="letters-and-score">
-        <button className="score"> {score} </button>
-        {lettersChosen.map((letter) => {
-          return (<button className="letters"> {letter} </button>)
-        })}
-        <button className="score" style={{backgroundColor: "white", fontSize: 20}} onClick={() => {newSet()}}> New Set </button>
-      </div>
-      <canvas className="canvas-free-draw" style={{width: 1050, height: 700, margin: 0, padding: 0}}
+      <canvas
+      className="canvas"
       ref={canvasRef}
+      width={400}
+      height={400}
+      onMouseDown={(e) => {
+        const ctx = canvasRef.current.getContext('2d');
+        ctx.beginPath();
+        ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+        canvasRef.current.addEventListener('mousemove', handleDraw);
+      }}
+      onMouseUp={() => {
+        canvasRef.current.removeEventListener('mousemove', handleDraw);
+      }}
       >
+
       </canvas>
-      <button className="timer">
-        <div className="timer-bar" style={{width: (barProgress/1000 * 1113)}}> </div>
-      </button>
+      <button className="draw" onClick={handleSubmit}>Submit</button>
     </>
   )
 }
+
+
 
 
 export { WordSearch, SequenceMemorization, LetterRescramble, LineDrawing, FreeDrawing };

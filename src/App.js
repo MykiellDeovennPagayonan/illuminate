@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BackgroundHomePage, BackgroundClassesPage, BackgroundStudentsPage, BackgroundStatisticsPage, BackgroundGames1, BackgroundGames2, BackgroundGames3 } from './components/background';
 import { WordSearch, SequenceMemorization, LetterRescramble, LineDrawing, FreeDrawing } from './components/games';
 import { LetterRecognition, SyllableRecognition, WordRecognition } from './components/phonetic games';
@@ -6,11 +6,20 @@ import { Classes } from './components/classes';
 import { StudentsPage } from './components/students';
 import { StatisticsPage } from './components/statistics';
 import {} from './components/games copy';
-
+import * as tf from '@tensorflow/tfjs'
 function App() {
   const [ pageNum, setPageNum ] = useState(1)
   const [ gameNum, setGameNum] = useState(1)
-
+    const MODEL_URL = 'model.json';
+  const [model, setModel] = useState(null);
+  useEffect(()=>{
+    const loadModel = async () => {
+      const m = await tf.loadGraphModel(MODEL_URL);
+      console.log(m)
+      setModel(m);
+    };
+    loadModel();
+    },[])
   return (
     <>
       {pageNum === 1 ? <div><BackgroundHomePage PageChange = {pageNum => setPageNum(pageNum)} GameChange = {gameNum => setGameNum(gameNum)}/></div>: null}
